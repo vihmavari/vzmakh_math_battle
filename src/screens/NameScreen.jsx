@@ -7,8 +7,8 @@ const NameScreen = () => {
   const [playerName, setPlayerName] = useState('');
 
   const bgImage = settings.rank === 'knight' 
-    ? '/assets/bg/knight_bg.png' 
-    : '/assets/bg/citizen_bg.png';
+    ? '{import.meta.env.BASE_URL}assets/bg/knight_bg.png' 
+    : '{import.meta.env.BASE_URL}assets/bg/citizen_bg.png';
 
   const handleNext = () => {
     if (playerName.trim().length >= 2) {

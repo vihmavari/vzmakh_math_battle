@@ -9,10 +9,10 @@ const LevelScreen = () => {
   const level_names = settings.rank === 'citizen' ? ["Горожанин", "Ремесленник", "Торговец", "Ополченец", "Оруженосец"] : 
                                                     ["Оруженосец", "Рыцарь", "Рыцарь-бароннет", "Командор", "Магистр"];
   const folder = settings.rank === 'knight' ? 'knight' : 'citizen';
-  const bgImage = `/assets/bg/level_bg.png`;
+  const bgImage = `{import.meta.env.BASE_URL}assets/bg/level_bg.png`;
 
   // Динамически определяем иконку в зависимости от ранга
-  const headerIcon = `/assets/levels/${folder}_level.png`;
+  const headerIcon = `{import.meta.env.BASE_URL}assets/levels/${folder}_level.png`;
 
   const handleLevelClick = (level) => {
     if (level <= settings.unlockedLevel) {
@@ -63,7 +63,7 @@ const LevelScreen = () => {
             >
               <div className="level-image-container">
                 <img 
-                  src={`/assets/levels/${folder}/level_${lvl}.png`} 
+                  src={`{import.meta.env.BASE_URL}assets/levels/${folder}/level_${lvl}.png`} 
                   alt={`Этап ${lvl}`} 
                   className="level-img-content"
                 />

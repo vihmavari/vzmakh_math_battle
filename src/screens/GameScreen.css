@@ -5,7 +5,7 @@
   overflow: hidden;
   background: #1a1a1a;
   color: #ead7b3;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('/assets/bg/game_bg.jpg')
+  background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('{import.meta.env.BASE_URL}assets/bg/game_bg.jpg')
 }
 
 .font-main { font-family: 'CiryllicHover', serif !important; }
@@ -181,7 +181,7 @@
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0.99);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('/assets/ui/blocker.png');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('{import.meta.env.BASE_URL}assets/ui/blocker.png');
   background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
