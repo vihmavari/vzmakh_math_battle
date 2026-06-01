@@ -51,7 +51,7 @@
   right: -0.625vh;
   bottom: -0.625vh;
 
-  background-image: url('assets/ui/header_frame.png');
+  background-image: url('/assets/ui/header_frame.png');
   background-size: 100%;
   background-repeat: no-repeat;
   
