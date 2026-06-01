@@ -8,7 +8,7 @@
   height: 100vh;
   box-sizing: border-box;
   
-  background-image: url('{import.meta.env.BASE_URL}assets/bg/citizen_level_bg.png');
+  background-image: url('assets/bg/citizen_level_bg.png');
   background-repeat: repeat !important;
   background-position: top left !important;
   background-size: 15vh 50vh !important;

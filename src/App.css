@@ -27,7 +27,7 @@
 
 @font-face {
   font-family: 'GaramondBold';
-  src: url('public/assets/fonts/garamondcond_bold.ttf') format('truetype');
+  src: url('assets/fonts/garamondcond_bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
