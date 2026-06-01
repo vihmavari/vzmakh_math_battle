@@ -27,12 +27,12 @@
 }
 
 .name-panel {
-  background-image: url('assets/ui/reg_bar.png');
+  background-image: url('/assets/ui/reg_bar.png');
   height: 85%
 }
 
 .grade-badge {
-  background-image: url('assets/ui/grade_bar.png');
+  background-image: url('/assets/ui/grade_bar.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   margin-top: 5vh;
@@ -67,7 +67,7 @@
 }
 
 .reg-btn {
-  background-image: url('assets/ui/accept_button.png');
+  background-image: url('/assets/ui/accept_button.png');
   background-size: 100% 100%;
   padding: 4vmin;
 }

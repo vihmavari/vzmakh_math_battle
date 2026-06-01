@@ -23,7 +23,7 @@ body, html {
 
 @font-face {
   font-family: 'GaramondBold';
-  src: url('assets/fonts/garamondcond_bold.ttf') format('truetype');
+  src: url('/assets/fonts/garamondcond_bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -31,7 +31,7 @@ body, html {
 
 @font-face {
   font-family: 'CiryllicHover';
-  src: url('assets/fonts/cyrillichover.ttf') format('truetype');
+  src: url('/assets/fonts/cyrillichover.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
