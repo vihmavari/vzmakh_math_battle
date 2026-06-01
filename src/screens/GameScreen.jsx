@@ -232,7 +232,7 @@ const GameScreen = () => {
                 >
                   <div className="icon-wrapper">
                     <img 
-                      src={`{import.meta.env.BASE_URL}assets/ui/step_icon_${iconNum}.png`} 
+                      src={`assets/ui/step_icon_${iconNum}.png`} 
                       alt={`Stage ${index + 1}`} 
                       className="step-icon-img-large"
                     />
@@ -249,7 +249,7 @@ const GameScreen = () => {
         <div className="block-70 main-play-field">
           {isLocked && (
             <div className="fog-overlay">
-              <img src='{import.meta.env.BASE_URL}assets/ui/blocker_upper.png' className="pic"></img>
+              <img src='assets/ui/blocker_upper.png' className="pic"></img>
               <button className="start-btn-big font-main" onClick={handleStart}>
                 {currentStageIndex === 0 ? "В БОЙ!" : "ПРОДОЛЖИТЬ"}
               </button>
@@ -291,7 +291,7 @@ const GameScreen = () => {
           <div className="sub-col-40-new">
             <div className="level-art-container">
               <img 
-                src={`{import.meta.env.BASE_URL}assets/levels/${settings.rank}/level_${settings.currentLevel}.png`} 
+                src={`assets/levels/${settings.rank}/level_${settings.currentLevel}.png`} 
                 className="level-art-image" 
                 alt="art" 
               />

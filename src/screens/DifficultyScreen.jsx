@@ -15,7 +15,7 @@ const DifficultyScreen = () => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
-  const characterAsset = `{import.meta.env.BASE_URL}assets/chars/${settings.rank}.png`;
+  const characterAsset = `assets/chars/${settings.rank}.png`;
 
   return (
     <div className="screen difficulty-layout">
