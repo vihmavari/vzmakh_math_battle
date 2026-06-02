@@ -422,3 +422,84 @@
   gap: 5px;
   font-size: 3rem;
 }
+
+/* Фоновая полупрозрачная завеса сохранения */
+.submit-overlay-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 5, 2, 0.85); /* Коричнево-черная мгла */
+  backdrop-filter: blur(4px); /* Легкое размытие заднего плана */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Поверх игрового процесса */
+}
+
+/* Карточка контента по центру */
+.submit-overlay-content {
+  background: linear-gradient(135deg, #2a0a04 0%, #1a0502 100%);
+  border: 3px solid #ead7b3;
+  border-radius: 6px;
+  padding: 40px 60px;
+  text-align: center;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.8),
+    inset 0 0 25px rgba(234, 215, 179, 0.2);
+  min-width: 320px;
+}
+
+.submit-score-title {
+  color: #ead7b3;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Плашка с очками */
+.submit-score-badge {
+  font-size: 1.5rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px dashed #421208;
+  margin-bottom: 30px;
+}
+
+/* Цвета для положительных и отрицательных очков за этап */
+.score-positive {
+  color: #ffd700; /* Золото */
+  font-weight: bold;
+}
+
+.score-negative {
+  color: #ff4500; /* Огненно-рыжий/красный */
+  font-weight: bold;
+}
+
+/* Надпись загрузки */
+.submit-loader-text {
+  color: #ead7b3;
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+/* Маленький крутящийся золотой маркер сохранения */
+.submit-mini-spinner {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+  border: 2px solid #421208;
+  border-top: 2px solid #ffd700;
+  border-radius: 50%;
+  animation: submitSpin 0.9s linear infinite;
+}
+
+@keyframes submitSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -22,6 +22,9 @@ const GameScreen = () => {
 
   const [totalScore, setTotalScore] = useState(0);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastStageScore, setLastStageScore] = useState(0);
+
   const isSessionInitialized = useRef(false);
   const sessionIdRef = useRef(`${settings.name.split(" ")[0]}-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
 
@@ -176,23 +179,28 @@ const GameScreen = () => {
   const handleFinish = async (reason = "Сдано") => {
     setIsTimerActive(false);
     
-    let finalScore = 0;
+    let stageScore = 0;
     tasks.forEach((task, i) => {
       if (answers[i]?.toString().toLowerCase() === task.correctAnswer.toLowerCase()) {
-        finalScore += stageConfig.score;
+        stageScore += stageConfig.score;
       } else {
-        finalScore -= stageConfig.penalty;
+        stageScore -= stageConfig.penalty;
       }
     });
 
-    setTotalScore(prev => prev + finalScore);
+    setLastStageScore(stageScore);
+    setIsSubmitting(true);
+
+    setTotalScore(prev => prev + stageScore);
 
     await logToSheet({
       sheet: "Журнал",
       sessionId: sessionIdRef.current,
       action: `${reason}: ${currentJob} (Этап ${currentStageIndex + 1})`,
-      score: finalScore
+      score: stageScore
     });
+
+    setIsSubmitting(false);
 
     const nextIdx = currentStageIndex + 1;
     if (nextIdx < allStages.length && reason !== "Время вышло") {
@@ -218,6 +226,21 @@ const GameScreen = () => {
 
   return (
     <div className="game-screen-wrapper">
+      {isSubmitting && (
+        <div className="submit-overlay-screen">
+          <div className="submit-overlay-content font-main">
+            <h2 className="submit-score-title">Этап Завершен!</h2>
+            <div className="submit-score-badge">
+              Результат: <span className={lastStageScore >= 0 ? "score-positive" : "score-negative"}>
+                {lastStageScore >= 0 ? `+${lastStageScore}` : lastStageScore} б.
+              </span>
+            </div>
+            <p className="submit-loader-text">Сохранение прогресса...</p>
+            <div className="submit-mini-spinner"></div>
+          </div>
+        </div>
+      )}
+
       <div className="game-half left-side">
         <div className="block-30 progress-header">
           <div className="stages-icons-row full-height-row">
