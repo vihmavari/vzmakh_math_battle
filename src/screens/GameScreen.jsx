@@ -20,6 +20,8 @@ const GameScreen = () => {
   const [stageConfig, setStageConfig] = useState({ score: 10, penalty: 0 });
   const [maxTime, setMaxTime] = useState({ time: 120 });
 
+  const [totalScore, setTotalScore] = useState(0);
+
   const isSessionInitialized = useRef(false);
   const sessionIdRef = useRef(`${settings.name.split(" ")[0]}-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
 
@@ -183,6 +185,8 @@ const GameScreen = () => {
       }
     });
 
+    setTotalScore(prev => prev + finalScore);
+
     await logToSheet({
       sheet: "Журнал",
       sessionId: sessionIdRef.current,
@@ -210,7 +214,7 @@ const GameScreen = () => {
 
   const strokeDashoffset = 100 - (timeLeft / maxTime.time) * 100;
 
-  if (isLoading) return <div className="loading font-main">Загрузка летописей...</div>;
+  if (isLoading) return <div className="loading font-main">Сохранение прогресса...</div>;
 
   return (
     <div className="game-screen-wrapper">
@@ -308,6 +312,12 @@ const GameScreen = () => {
 
         <div className="block-30 stats-footer">
           <div className="timer-zone">
+
+            <div className="score-counter-box font-main">
+              <span className="score-label">ОЧКИ</span>
+              <span className="score-value">{totalScore}</span>
+            </div>
+
             <div className="circular-timer">
               <svg viewBox="0 0 36 36" className="timer-svg">
                 <circle className="timer-bg" cx="18" cy="18" r="16" />
