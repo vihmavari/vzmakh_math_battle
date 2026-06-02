@@ -58,7 +58,7 @@ const App = () => {
     return (
       <div className="preloader-screen">
         <div className="preloader-content">
-          <h1 className="font-main loading-text">Загрузка обители...</h1>
+          <h1 className="font-main loading-text">Подготовка к поединку...</h1>
           <div className="preloader-spinner"></div>
         </div>
       </div>
