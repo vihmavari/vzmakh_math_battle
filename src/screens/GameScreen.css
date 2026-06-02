@@ -181,25 +181,20 @@
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0.99);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('/assets/ui/blocker.png');
-  background-size: 70%;
-  background-repeat: no-repeat;
-  background-position: center;
   z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* position: relative */
 }
 
 .start-btn-big {
   position: absolute;
-  top: 22%;
+  top: 31vh;
   left: 50%;
   transform: translate(-50%, -50%);
   
   width: 30%;
-  z-index: 2;
+  z-index: 3;
   
   display: flex;
   justify-content: center;
@@ -238,27 +233,34 @@
   transform: translate(-50%, -54%);
 }
 
-/* Эффект при нажатии (Активное состояние) */
 .start-btn-big:active {
-  transform: translate(-50%, -48%); /* Кнопка утапливается обратно */
+  transform: translate(-50%, -48%);
   box-shadow: 
     0 0 0 2px #2a0a04,
     0 5px 10px rgba(0, 0, 0, 0.9),
-    inset 0 0 30px rgba(0, 0, 0, 0.6); /* Внутренняя тень имитирует нажатие */
+    inset 0 0 30px rgba(0, 0, 0, 0.6);
 }
 
 .pic {
   position: absolute;
-  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
-  width: 30%;
-  z-index: 1;
   
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.lower {
+  top: 31.5vh;
+  width: 69%;
+  z-index: 1;
+}
+
+.upper {
+  top: 30vh;
+  width: 40%;
+  z-index: 2;
 }
 
 .task-list {

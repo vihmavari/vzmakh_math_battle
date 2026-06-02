@@ -131,7 +131,6 @@ const GameScreen = () => {
     if (reward === minReward) return 1;
     if (reward === maxReward) return 4;
     
-    // Распределяем промежуточные значения
     const range = maxReward - minReward;
     if (range === 0) return 1;
     
@@ -249,7 +248,8 @@ const GameScreen = () => {
         <div className="block-70 main-play-field">
           {isLocked && (
             <div className="fog-overlay">
-              <img src='assets/ui/blocker_upper.png' className="pic"></img>
+              <img src='assets/ui/blocker.png' className="pic lower"></img>
+              <img src='assets/ui/blocker_upper.png' className="pic upper"></img>
               <button className="start-btn-big font-main" onClick={handleStart}>
                 {currentStageIndex === 0 ? "В БОЙ!" : "ПРОДОЛЖИТЬ"}
               </button>
@@ -284,10 +284,8 @@ const GameScreen = () => {
       </div>
 
       <div className="game-half right-side">
-        {/* Верхний блок (70% высоты), делим по горизонтали на 40% и 60% */}
         <div className="block-70 info-board">
           
-          {/* ЛЕВАЯ КОЛОНКА (40% ширины): Кнопка + Картинка */}
           <div className="sub-col-40-new">
             <div className="level-art-container">
               <img 
@@ -298,7 +296,6 @@ const GameScreen = () => {
             </div>
           </div>
 
-          {/* ПРАВАЯ КОЛОНКА (60% ширины): Блок инфо */}
           <div className="sub-col-60-new">
             <div className="shop-scroll font-main">
               <h4>ИНФО</h4>
@@ -309,7 +306,6 @@ const GameScreen = () => {
           
         </div>
 
-        {/* Нижний блок (30% высоты) с таймером остается без изменений */}
         <div className="block-30 stats-footer">
           <div className="timer-zone">
             <div className="circular-timer">
