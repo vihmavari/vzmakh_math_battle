@@ -4,7 +4,7 @@ import GameAlert from '../components/GameAlert';
 import './GameScreen.css';
 
 const GameScreen = () => {
-  const { settings, setSettings, setScreen } = useGame();
+  const { settings, setSettings, setScreen, addPoints } = useGame();
   
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypaQ6sm4vXjux-kmGxIYK52vyeK_0bl6xwLAx6IXtj8Qv2IfXyhfZcSuMl15Jrd6aF/exec';
   const SHEET_ID = '1ennOugurxbD3OgqZ-z9tR4rWTmtTs7ih8lsSrOOau_U';
@@ -34,17 +34,15 @@ const GameScreen = () => {
   
 
   const handleAddComponents = async () => {
-    if (isLocked || totalScore < 5 || timeLeft > maxTime - 6) return;
+    if (isLocked || settings.score < 5 || timeLeft > maxTime - 6) return;
 
-    setTotalScore(prev => prev - 5);
+    addPoints(-5);
     setTimeLeft(prev => prev + 5);
 
-    action = "Покупка времени (5 сек)"
-    
     await logToSheet({
       sheet: "Журнал",
       sessionId: settings.sessionID,
-      action: `${action}: ${currentJob} (Этап ${currentStageIndex + 1})`,
+      action: `Покупка времени (5 сек): ${currentJob} (Этап ${currentStageIndex + 1})`,
       score: -5
     });
 
@@ -90,7 +88,8 @@ const GameScreen = () => {
     }
   };
 
-  const logToSheet = async (data) => {
+  const logToSheet = async (data, attempt = 0) => {
+    
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
@@ -98,13 +97,25 @@ const GameScreen = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-    } catch (e) { console.error("Log error:", e); }
+    } catch (e) { 
+      console.error("Log error:", e);
+      console.error("Attempt:", attempt);
+      if (attempt < 5) {
+        await logToSheet(data, attempt + 1)
+      } else {
+        console.log("МЫ НА ЭТОМ МЕСТЕ")
+        setAlertConfig({
+          isOpen: true,
+          title: "Ошибка записи! Подзови преподавателя",
+          message: JSON.stringify(data)
+        });
+      }
+
+    };
   };
 
   const loadStageData = async (stageIdx, stagesList = []) => {
     setIsLoading(true);
-    if (totalScore === 0) {setTotalScore(prev => prev + settings.score)}
-    
     try {
       let stages = stagesList.length > 0 ? stagesList : allStages;
       
@@ -235,7 +246,7 @@ const GameScreen = () => {
 
     setLastStageScore(stageScore);
     setIsSubmitting(true);
-    setTotalScore(prev => prev + stageScore);
+    addPoints(stageScore);
 
     await logToSheet({
       sheet: "Журнал",
@@ -252,17 +263,17 @@ const GameScreen = () => {
       setIsLocked(true);
       loadStageData(nextIdx);
     } else {
-      if (totalScore < 0 || totalScore === 0  || reason === "Время вышло") {
+      if (settings.score < 0  || reason === "Время вышло") {
         setSettings(prev => ({ ...prev, unlockedLevel: settings.currentLevel }));
       }
       else if (settings.isProgressLocked && reason !== "Время вышло") {
         let newLevel = settings.unlockedLevel;
         if (settings.currentLevel === 2) newLevel = Math.max(newLevel, 4);
         else if (settings.currentLevel === 4) newLevel = Math.max(newLevel, 5);
-        else if (newLevel !== 5) newLevel = settings.currentLevel + 1;
+        else if (newLevel < 5) newLevel = Math.max(newLevel, settings.currentLevel + 1);
         setSettings(prev => ({ ...prev, unlockedLevel: newLevel }));
       }
-      if (totalScore < 0) {
+      if (settings.score < 0) {
         setAlertConfig({
           isOpen: true,
           title: "Неудача!",
@@ -275,7 +286,7 @@ const GameScreen = () => {
           message: reason === "Время вышло" ? "Текущий этап прерван." : "Ты переходишь на ступень выше! Удачи в следующем турнире!"
         });
       }
-      setSettings(prev => ({ ...prev, score: settings.score + totalScore + stageScore }));
+      console.log(settings.score)
     }
     
   };
@@ -342,7 +353,7 @@ const GameScreen = () => {
           <button 
             className="header-extra-btn font-main" 
             onClick={handleAddComponents}
-            disabled={isLocked || totalScore < 5}
+            disabled={isLocked || settings.score < 5}
           >
             Добавить время
           </button>
@@ -352,7 +363,7 @@ const GameScreen = () => {
             {showScoreMinus && <div className="floating-indicator minus-score font-main">-5 б.</div>}
             <div className="score-counter-box font-main">
               <span className="score-label">ОЧКИ</span>
-              <span className="score-value">{totalScore}</span>
+              <span className="score-value">{settings.score}</span>
             </div>
           </div>
 

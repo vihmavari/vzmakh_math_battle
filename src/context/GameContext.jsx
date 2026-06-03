@@ -15,8 +15,15 @@ export const GameProvider = ({ children }) => {
     score: 0,
   });
 
+  const addPoints = (points) => {
+    setSettings(prev => ({
+      ...prev,
+      score: prev.score + points
+    }));
+  };
+
   return (
-    <GameContext.Provider value={{ screen, setScreen, settings, setSettings }}>
+    <GameContext.Provider value={{ screen, setScreen, settings, setSettings, addPoints }}>
       {children}
     </GameContext.Provider>
   );
