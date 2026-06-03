@@ -5,15 +5,15 @@
   align-items: center; 
   
   width: 100vw;
-  height: 100lvh;
+  height: 100vh;
   box-sizing: border-box;
   
   background-image: url('/assets/bg/citizen_level_bg.png');
   background-repeat: repeat !important;
   background-position: top left !important;
-  background-size: 15lvh 50lvh !important;
+  background-size: 15vh 50vh !important;
   
-  padding: 5lvh 5lvh 0 5lvh; 
+  padding: 5vh 5vh 0 5vh; 
 }
 
 .level-row {
@@ -21,7 +21,7 @@
   flex-direction: row;
   align-items: flex-end;
   justify-content: center;
-  gap: 2.5lvh;
+  gap: 2.5vh;
   width: 100%;
   margin-bottom: 0; 
 }
@@ -44,35 +44,35 @@
   align-items: flex-end;
   line-height: 0;
   
-  filter: drop-shadow(0.25lvh 0.25lvh 0 #886a4e) 
-          drop-shadow(-0.25lvh -0.25lvh 0 #886a4e)
-          drop-shadow(0.25lvh -0.25lvh 0 #886a4e)
-          drop-shadow(-0.25lvh 0.25lvh 0 #886a4e);
+  filter: drop-shadow(0.25vh 0.25vh 0 #886a4e) 
+          drop-shadow(-0.25vh -0.25vh 0 #886a4e)
+          drop-shadow(0.25vh -0.25vh 0 #886a4e)
+          drop-shadow(-0.25vh 0.25vh 0 #886a4e);
 }
 
 .level-img-content {
   width: auto;
   max-width: auto;
-  height: 60lvh;
+  height: 60vh;
   display: block;
 }
 
 .level-label {
   background: #886a4e;
-  border: 0.5lvh solid #886a4e;
+  border: 0.5vh solid #886a4e;
   
   width: 100%; 
   box-sizing: border-box;
-  padding: 1.75lvh 0.5vw;
+  padding: 1.75vh 0.5vw;
   
-  margin-top: -0.125lvh;
+  margin-top: -0.125vh;
   font-family: 'CiryllicHover', serif!important;
   color: #ead7b3;
   font-size: 1.5vw;
   white-space: nowrap;
   text-align: center;
   z-index: 2;
-  box-shadow: 0 0.5lvh 1lvh rgba(0,0,0,0.5);
+  box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.5);
 }
 
 .level-item.locked .level-image-container {
@@ -86,7 +86,7 @@
 }
 
 .level-item.available:hover {
-  transform: translateY(-1.5lvh);
+  transform: translateY(-1.5vh);
 }
 
 .level-item.locked {
@@ -101,11 +101,11 @@
 
 .level-item.available:hover .level-image-container {
   filter: 
-    drop-shadow(0 0 1lvh rgba(234, 215, 179, 0.6))
-    drop-shadow(0.25lvh 0.25lvh 0 #ead7b3) 
-    drop-shadow(-0.25lvh -0.25lvh 0 #ead7b3)
-    drop-shadow(0.25lvh -0.25lvh 0 #ead7b3)
-    drop-shadow(-0.25lvh 0.25lvh 0 #ead7b3)
+    drop-shadow(0 0 1vh rgba(234, 215, 179, 0.6))
+    drop-shadow(0.25vh 0.25vh 0 #ead7b3) 
+    drop-shadow(-0.25vh -0.25vh 0 #ead7b3)
+    drop-shadow(0.25vh -0.25vh 0 #ead7b3)
+    drop-shadow(-0.25vh 0.25vh 0 #ead7b3)
     brightness(1.1);
 }
 
@@ -113,12 +113,12 @@
   background: #5a1a0c;
   border-color: #fff4d1;
   color: #fff;
-  box-shadow: 0 0.5lvh 2lvh rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0.5vh 2vh rgba(255, 215, 0, 0.4);
   transition: all 0.2s ease;
 }
 
 .back-btn {
-  margin: 2lvh 0;
+  margin: 2vh 0;
 }
 
 /* Основной контейнер экрана должен выстраивать элементы сверху вниз */
@@ -127,7 +127,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding-top: 4lvh; /* Небольшой отступ сверху */
+  padding-top: 4vh; /* Небольшой отступ сверху */
 }
 
 /* Стили для контейнера шапки */
@@ -136,13 +136,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2lvh; /* Отступ от шапки до карточек уровней */
+  margin-bottom: 2vh; /* Отступ от шапки до карточек уровней */
   z-index: 2;
 }
 
 /* Размер иконки ранга сверху */
 .header-rank-icon {
-  height: 25lvh;
+  height: 25vh;
   object-fit: contain;
   margin-bottom: 10px;
   filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.6));
@@ -161,7 +161,7 @@
 /* Кнопку "Назад" фиксируем в углу, чтобы она не мешала центрированию */
 .back-btn {
   position: absolute;
-  top: 4lvh;
+  top: 4vh;
   left: 4vw;
   z-index: 10;
 }

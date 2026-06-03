@@ -54,6 +54,25 @@ const App = () => {
     }
   }, [screen, currentVisibleScreen]);
 
+  useEffect(() => {
+  let lastWidth = window.innerWidth;
+
+  const fixInitialHeight = () => {
+    const currentWidth = window.innerWidth;
+    
+    if (currentWidth !== lastWidth || !document.documentElement.style.getPropertyValue('--vh')) {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      lastWidth = currentWidth;
+    }
+  };
+
+  fixInitialHeight();
+  
+  window.addEventListener('resize', fixInitialHeight);
+  return () => window.removeEventListener('resize', fixInitialHeight);
+}, []);
+
   if (!isAssetsLoaded) {
     return (
       <div className="preloader-screen">

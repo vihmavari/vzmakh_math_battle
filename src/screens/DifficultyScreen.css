@@ -1,6 +1,6 @@
 /* ================= НАСТРОЙКА ОБЩЕГО ЭКРАНА ================= */
 html {
-  font-size: 1.8lvh; 
+  font-size: 1.8vh; 
 }
 
 .difficulty-layout {
@@ -9,14 +9,14 @@ html {
   align-items: center;
   
   padding: 3vw;
-  gap: 1lvh;
+  gap: calc(var(--vh, 1vh) * 100);
   background-image: url('/assets/bg/castle_difficulty_bg.png');
   background-color: #111;
   background-size: cover;
   background-position: center;
   box-sizing: border-box;
   width: 100vw;
-  height: 100lvh;
+  height: calc(var(--vh, 100vh) * 100);
   overflow: hidden;
   user-select: none;
 }
@@ -43,24 +43,24 @@ html {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-bottom: 3lvh;
+  padding-bottom: calc(var(--vh, 3vh) * 100);
 }
 
 .selection-area h3 {
   font-family: 'GaramondBold', serif;
   color: #ead7b3;
-  padding-top: 0.15lvh;
+  padding-top: calc(var(--vh, 0.15vh) * 100);
   font-size: 1.75vw;
-  letter-spacing: 0.15lvh;
+  letter-spacing: calc(var(--vh, 0.15vh) * 100);
   z-index: 1;
 }
 
 .header-frame {
   position: absolute;
-  top: -0.625lvh;
-  left: -0.625lvh;
-  right: -0.625lvh;
-  bottom: -0.625lvh;
+  top: calc(var(--vh, -0.625vh) * 100);
+  left: calc(var(--vh, -0.625vh) * 100);
+  right: calc(var(--vh, -0.625vh) * 100);
+  bottom: calc(var(--vh, -0.625vh) * 100);
 
   background-image: url('/assets/ui/header_frame.png');
   background-size: 100%;
@@ -75,10 +75,10 @@ html {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 2.5lvh;
-  margin-bottom: 2.5lvh;
+  gap: calc(var(--vh, 2.5vh) * 100);
+  margin-bottom: calc(var(--vh, 2.5vh) * 100);
   align-items: center;
-  padding-bottom: 1lvh;
+  padding-bottom: calc(var(--vh, 1vh) * 100);
 }
 
 .radio-container {
@@ -89,10 +89,10 @@ html {
 }
 
 .radio-btn {
-  margin-left: 1.5lvh;
-  margin-right: 1.5lvh;
+  margin-left: calc(var(--vh, 1.5vh) * 100);
+  margin-right: calc(var(--vh, 1.5vh) * 100);
   padding: 0.3vw;
-  border: 0.375lvh solid #444;
+  border: calc(var(--vh, 0.375vh) * 100) solid #444;
   background: #421208;
   color: #ead7b3;
   font-family: 'GaramondBold', serif;
@@ -112,15 +112,15 @@ html {
   border-color: #373334;
   background: #421208;
   color: #cd574d;
-  transform: translateY(-0.25lvh);
+  transform: translateY(calc(var(--vh, -0.25vh) * 100));
 }
 
 .button-frame {
   position: absolute;
-  top: -0.625lvh;
-  left: -0.625lvh;
-  right: -0.625lvh;
-  bottom: -0.625lvh;
+  top: calc(var(--vh, -0.625vh) * 100);
+  left: calc(var(--vh, -0.625vh) * 100);
+  right: calc(var(--vh, -0.625vh) * 100);
+  bottom: calc(var(--vh, -0.625vh) * 100);
   
   background-image: url('/assets/ui/button_frame.png');
   background-size: 100% 100%;
@@ -131,13 +131,13 @@ html {
 }
 
 .radio-btn.active + .button-frame {
-  filter: brightness(1.2) drop-shadow(0 0 0.5lvh rgba(55, 51, 52, 0.4));
+  filter: brightness(1.2) drop-shadow(0 0 0.5vh rgba(55, 51, 52, 0.4));
 }
 
 /* Фирменная кнопка продолжения */
 .start-game-btn {
-  padding-top: 2lvh;
-  padding-bottom: 3lvh;
+  padding-top: calc(var(--vh, 2vh) * 100);
+  padding-bottom: calc(var(--vh, 3vh) * 100);
   padding-left: 1.5vw;
   padding-right: 2vw;
   align-self: center;
@@ -149,7 +149,7 @@ html {
   font-family: 'GaramondBold', serif;
   font-size: 1.5vw;
   color: rgba(99, 15, 15);
-  -webkit-text-stroke: 0.15lvh rgba(255, 255, 255, 0.25);
+  -webkit-text-stroke: calc(var(--vh, 0.15vh) * 100) rgba(255, 255, 255, 0.25);
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -157,7 +157,7 @@ html {
 }
 
 .start-game-btn:active {
-  transform: translateY(0.3lvh);
+  transform: translateY(calc(var(--vh, 0.3vh) * 100));
 }
 
 
@@ -170,14 +170,14 @@ html {
   flex-direction: column;
   justify-content: space-between; /* Распределяем персонажа наверх, таблицу вниз */
   align-items: center;
-  padding: 2lvh 2vw;
-  gap: 2lvh;
+  padding: calc(var(--vh, 2vh) * 100) 2vw;
+  gap: calc(var(--vh, 2vh) * 100);
 }
 
 /* Карточка персонажа занимает верхнюю половину */
 .character-card {
   width: 100%;
-  height: 40lvh;
+  height: 40vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,7 +187,7 @@ html {
   max-height: 100%; 
   max-width: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 1.5lvh 2.5lvh rgba(0,0,0,0.7));
+  filter: drop-shadow(0 calc(var(--vh, 1.5vh) * 100) calc(var(--vh, 2.5vh) * 100) rgba(0,0,0,0.7));
   transition: transform 0.3s ease;
 }
 
@@ -197,10 +197,10 @@ html {
   width: 100%;
   max-width: 42vw; /* Оптимальная ширина внутри зоны 70vw */
   background: linear-gradient(135deg, #1a0502 0%, #0d0201 100%);
-  border: 0.375lvh solid #444; /* Под стиль рамок кнопок */
-  border-radius: 0.5lvh;
-  box-shadow: 0 1.5lvh 3lvh rgba(0, 0, 0, 0.8);
-  padding: 2lvh 1.5vw;
+  border: calc(var(--vh, 0.375vh) * 100) solid #444; /* Под стиль рамок кнопок */
+  border-radius: 0.5vh;
+  box-shadow: 0 calc(var(--vh, 1.5vh) * 100) calc(var(--vh, 3vh) * 100) rgba(0, 0, 0, 0.8);
+  padding: calc(var(--vh, 2vh) * 100) 1.5vw;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -211,11 +211,11 @@ html {
   color: #ead7b3;
   font-family: 'GaramondBold', serif;
   font-size: 1.4rem;
-  letter-spacing: 0.1lvh;
-  border-bottom: 0.15lvh dashed rgba(234, 215, 179, 0.25);
-  padding-bottom: 0.8lvh;
-  margin-bottom: 1.5lvh;
-  text-shadow: 0.15lvh 0.15lvh 0.3lvh #000;
+  letter-spacing: 0.calc(var(--vh, 1vh) * 100);
+  border-bottom: calc(var(--vh, 0.15vh) * 100) dashed rgba(234, 215, 179, 0.25);
+  padding-bottom: calc(var(--vh, 0.15vh) * 100);
+  margin-bottom: calc(var(--vh, 1.5vh) * 100);
+  text-shadow: calc(var(--vh, 0.15vh) * 100) calc(var(--vh, 0.15vh) * 100) calc(var(--vh, 0.calc(var(--vh, 3vh) * 100)) * 100) #000;
 }
 
 .leaderboard-status {
@@ -224,7 +224,7 @@ html {
   font-family: 'GaramondBold', serif;
   font-size: 1.1rem;
   font-style: italic;
-  padding: 3lvh 0;
+  padding: calc(var(--vh, 3vh) * 100) 0;
   opacity: 0.7;
 }
 
@@ -239,16 +239,16 @@ html {
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05vw;
-  padding-bottom: 0.6lvh;
-  border-bottom: 0.2lvh solid #421208;
+  padding-bottom: calc(var(--vh, 0.6vh) * 100);
+  border-bottom: calc(var(--vh, 0.2vh) * 100) solid #421208;
   opacity: 0.8;
 }
 
 .leaderboard-table td {
-  padding: 0.8lvh 0.5vw;
+  padding: calc(var(--vh, 0.15vh) * 100) 0.5vw;
   font-size: 1.1rem;
   color: #ead7b3;
-  border-bottom: 0.15lvh solid rgba(66, 18, 8, 0.2);
+  border-bottom: calc(var(--vh, 0.15vh) * 100) solid rgba(66, 18, 8, 0.2);
 }
 
 /* Колонки таблицы */
@@ -278,13 +278,13 @@ html {
 }
 .row-rank-1 .td-score {
   color: #ffd700; /* Золото лидеру */
-  text-shadow: 0 0 0.8lvh rgba(255, 215, 0, 0.4);
+  text-shadow: 0 0 calc(var(--vh, 0.15vh) * 100) rgba(255, 215, 0, 0.4);
 }
 
 /* Адаптивный скроллбар для списка учеников */
 .leaderboard-table tbody {
   display: block;
-  max-height: 22lvh; /* Идеально ложится в интерфейс, не сжимая карточку */
+  max-height: calc(var(--vh, 22vh) * 100); /* Идеально ложится в интерфейс, не сжимая карточку */
   overflow-y: auto;
 }
 
@@ -306,7 +306,7 @@ html {
 
 .leaderboard-table tbody::-webkit-scrollbar-thumb {
   background: #421208;
-  border-radius: 0.2lvh;
+  border-radius: 0.calc(var(--vh, 2vh) * 100);
 }
 
 .leaderboard-table tbody::-webkit-scrollbar-thumb:hover {
