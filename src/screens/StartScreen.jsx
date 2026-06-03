@@ -8,7 +8,7 @@ const StartScreen = () => {
   useEffect(() => {
     const handleKeyPress = () => setScreen('DIFFICULTY');
     window.addEventListener('keydown', handleKeyPress);
-    window.addEventListener('touchstart', handleKeyPress); // Для планшетов
+    window.addEventListener('touchstart', handleKeyPress);
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress);

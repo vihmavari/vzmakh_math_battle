@@ -22,7 +22,21 @@ const DifficultyScreen = () => {
   const currentEstate = settings.rank === 'knight' ? 'Рыцарь' : 'Горожанин';
   const characterAsset = `assets/chars/${settings.rank}.png`;
 
+  const enterFullscreen = () => {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari, Яндекс */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  };
+
   useEffect(() => {
+    enterFullscreen()
     const fetchLeaderboardData = async () => {
       try {
         const journalUrl = `https://docs.google.com/spreadsheets/d/${JOURNAL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Журнал")}`;
@@ -149,7 +163,7 @@ const DifficultyScreen = () => {
         {/* Сброс sessionID в соответствии с контекстом системы */}
         <button 
           className="start-game-btn" 
-          onClick={() => { updateSetting('sessionID', ''); setScreen('NAME'); }}
+          onClick={() => { updateSetting('sessionID', ''); setScreen('NAME');}}
         >
           Продолжить
         </button>
