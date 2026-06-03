@@ -1,0 +1,8 @@
+{
+  "short_name": "Мат. игра",
+  "name": "Взмах. Математическая игра",
+  "start_url": ".",
+  "background_color": "#120301",
+  "display": "standalone",
+  "orientation": "landscape"
+}
