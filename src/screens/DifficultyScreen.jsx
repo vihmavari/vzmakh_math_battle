@@ -83,8 +83,6 @@ const DifficultyScreen = () => {
           };
         }).filter(log => log.estate);
 
-        console.log(fullLogs)
-
         setLeaderboard(fullLogs);
         setIsLoadingLeaders(false);
       } catch (e) {

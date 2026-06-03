@@ -31,6 +31,7 @@ const GameScreen = () => {
   const [showScoreMinus, setShowScoreMinus] = useState(false);
 
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '' });
+  
 
   const handleAddComponents = async () => {
     if (isLocked || totalScore < 5 || timeLeft > maxTime - 6) return;
@@ -102,6 +103,8 @@ const GameScreen = () => {
 
   const loadStageData = async (stageIdx, stagesList = []) => {
     setIsLoading(true);
+    if (totalScore === 0) {setTotalScore(prev => prev + settings.score)}
+    
     try {
       let stages = stagesList.length > 0 ? stagesList : allStages;
       
@@ -259,14 +262,22 @@ const GameScreen = () => {
         else if (newLevel !== 5) newLevel = settings.currentLevel + 1;
         setSettings(prev => ({ ...prev, unlockedLevel: newLevel }));
       }
-      setAlertConfig({
-        isOpen: true,
-        title: reason === "Время вышло" ? "Время истекло!" : "Поздравляю!",
-        message: reason === "Время вышло" ? "Текущий этап прерван." : "Ты переходишь на ступень выше! Удачи в следующем турнире!"
-      });
-
-      setSettings(prev => ({ ...prev, score: settings.score + totalScore }));
+      if (totalScore < 0) {
+        setAlertConfig({
+          isOpen: true,
+          title: "Неудача!",
+          message: "Эта ступень не покорилась тебе, попробуй ещё раз!"
+        });
+      } else {
+        setAlertConfig({
+          isOpen: true,
+          title: reason === "Время вышло" ? "Время истекло!" : "Поздравляю!",
+          message: reason === "Время вышло" ? "Текущий этап прерван." : "Ты переходишь на ступень выше! Удачи в следующем турнире!"
+        });
+      }
+      setSettings(prev => ({ ...prev, score: settings.score + totalScore + stageScore }));
     }
+    
   };
 
   const timePercentage = Math.min((timeLeft / maxTime.time) * 100, 100);
@@ -396,9 +407,9 @@ const GameScreen = () => {
         <button 
           className="finish-btn font-main" 
           onClick={() => handleFinish()} 
-          disabled={isLocked}
+          disabled={isLocked || isSubmitting}
         >
-          СДАТЬ
+          {isSubmitting ? "ОТПРАВКА..." : "СДАТЬ"}
         </button>
       </div>
       <GameAlert 
