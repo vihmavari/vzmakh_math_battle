@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGame } from '../context/GameContext';
+import GameAlert from '../components/GameAlert';
 import './GameScreen.css';
 
 const GameScreen = () => {
@@ -265,7 +266,6 @@ const GameScreen = () => {
       });
 
       setSettings(prev => ({ ...prev, score: settings.score + totalScore }));
-      setScreen('LEVELS');
     }
   };
 
@@ -401,7 +401,12 @@ const GameScreen = () => {
           СДАТЬ
         </button>
       </div>
-
+      <GameAlert 
+        isOpen={alertConfig.isOpen}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        onClose={() => {setAlertConfig(prev => ({ ...prev, isOpen: false })); setScreen('LEVELS');}}
+      />
     </div>
   );
 };
