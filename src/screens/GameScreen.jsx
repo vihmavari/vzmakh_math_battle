@@ -29,6 +29,8 @@ const GameScreen = () => {
   const [showTimeBonus, setShowTimeBonus] = useState(false);
   const [showScoreMinus, setShowScoreMinus] = useState(false);
 
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '' });
+
   const handleAddComponents = async () => {
     if (isLocked || totalScore < 5 || timeLeft > maxTime - 6) return;
 
@@ -256,7 +258,12 @@ const GameScreen = () => {
         else if (newLevel !== 5) newLevel = settings.currentLevel + 1;
         setSettings(prev => ({ ...prev, unlockedLevel: newLevel }));
       }
-      alert(reason === "Время вышло" ? "Время истекло! Сессия завершена." : "Все этапы пройдены!");
+      setAlertConfig({
+        isOpen: true,
+        title: reason === "Время вышло" ? "Время истекло!" : "Поздравляю!",
+        message: reason === "Время вышло" ? "Текущий этап прерван." : "Ты переходишь на ступень выше! Удачи в следующем турнире!"
+      });
+
       setSettings(prev => ({ ...prev, score: settings.score + totalScore }));
       setScreen('LEVELS');
     }

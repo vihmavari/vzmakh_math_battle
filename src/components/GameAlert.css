@@ -1,0 +1,74 @@
+/* ================= КАСТОМНЫЙ ИГРОВОЙ АЛЕРТ ================= */
+.alert-overlay-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 3, 1, 0.95);
+  backdrop-filter: blur(0.5vh);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000; /* Перекрывает абсолютно всё, даже хедэр и футер */
+}
+
+.alert-overlay-content {
+  background: linear-gradient(135deg, #2a0a04 0%, #1a0502 100%);
+  border: 0.35vh solid #ead7b3;
+  border-radius: 0.8vh;
+  padding: 5vh 4vw;
+  text-align: center;
+  box-shadow: 
+    0 2vh 5vh rgba(0, 0, 0, 0.9),
+    inset 0 0 2.5vh rgba(234, 215, 179, 0.15);
+  min-width: 30vw;
+  max-width: 50vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3vh;
+}
+
+.alert-score-title {
+  color: #ffd700; /* Золотой заголовок */
+  font-size: 1.6rem;
+  letter-spacing: 0.15vw;
+  text-transform: uppercase;
+  text-shadow: 0.2vh 0.2vh 0.4vh rgba(0, 0, 0, 0.8);
+  margin: 0;
+}
+
+.alert-message-badge {
+  font-size: 1.2rem;
+  color: #ead7b3;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2vh 2.5vw;
+  border-radius: 0.5vh;
+  border: 0.15vh dashed #421208;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.4;
+}
+
+/* Стилизация кнопки ОК под общую стилистику твоих кнопок */
+.alert-close-btn {
+  background: linear-gradient(135deg, #a02a18 0%, #5c1107 100%);
+  border: 0.25vh solid #ead7b3;
+  color: #ead7b3;
+  font-size: 1.2rem;
+  padding: 1.2vh 4vw;
+  border-radius: 0.5vh;
+  cursor: pointer;
+  box-shadow: 0 0.5vh 1.5vh rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.1vw;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.alert-close-btn:hover {
+  background: linear-gradient(135deg, #bd3520 0%, #75190e 100%);
+  color: #fff;
+  transform: translateY(-0.2vh);
+}
+
+.alert-close-btn:active {
+  transform: translateY(0.1vh);
+}

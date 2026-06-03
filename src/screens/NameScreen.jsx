@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
+import GameAlert from '../components/GameAlert';
 import './NameScreen.css';
 
 const NameScreen = () => {
   const { settings, setSettings, setScreen } = useGame();
   const [playerName, setPlayerName] = useState('');
+
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '' });
 
   const bgImage = settings.rank === 'knight' 
     ? 'assets/bg/knight_bg.png' 
@@ -15,7 +18,11 @@ const NameScreen = () => {
       setSettings(prev => ({ ...prev, name: playerName }));
       setScreen('LEVELS');
     } else {
-      alert('Герой, назови себя!');
+      setAlertConfig({
+        isOpen: true,
+        title: "Внимание, Герой!",
+        message: "Представься, прежде чем отправляться в путь. Имя не может быть пустым!"
+      });
     }
   };
 
@@ -60,6 +67,12 @@ const NameScreen = () => {
 
       <div className="preview-area" style={{ border: 'none', background: 'none' }}>
       </div>
+      <GameAlert 
+        isOpen={alertConfig.isOpen}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        onClose={() => setAlertConfig(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 };

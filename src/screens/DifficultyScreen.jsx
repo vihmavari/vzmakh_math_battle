@@ -179,7 +179,7 @@ const DifficultyScreen = () => {
         {/* Окно таблицы лидеров */}
         <div className="leaderboard-box">
           <div className="leaderboard-header">
-            Летопись успехов ({settings.grade} класс)
+            Таблица лидеров ({settings.grade} класс)
           </div>
           
           {isLoadingLeaders ? (
