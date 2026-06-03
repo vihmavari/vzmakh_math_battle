@@ -1,3 +1,8 @@
+/* ================= НАСТРОЙКА ОБЩЕГО ЭКРАНА ================= */
+html {
+  font-size: 1.8vh; 
+}
+
 .difficulty-layout {
   display: grid;
   grid-template-columns: auto auto;
@@ -7,19 +12,18 @@
   gap: 1vh;
   background-image: url('/assets/bg/castle_difficulty_bg.png');
   background-color: #111;
+  background-size: cover;
+  background-position: center;
   box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
 }
 
-.preview-area {
-  width: 70%;
-  height: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-
+/* ================= ЛЕВАЯ ЧАСТЬ: МЕНЮ ВЫБОРА (30%) ================= */
 .selection-area {
-  width: 30%;
+  width: 30vw;
   height: 100%;
   box-sizing: border-box;
   display: flex;
@@ -34,6 +38,13 @@
   padding: 3vw;
 }
 
+.header-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 3vh;
+}
 
 .selection-area h3 {
   font-family: 'GaramondBold', serif;
@@ -59,22 +70,7 @@
   z-index: 0;
 }
 
-
-.radio-container {
-  position: relative;
-  width: 90%;
-  display: flex;
-  justify-content: center;
-}
-
-.header-container {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding-bottom: 3vh;
-}
-
+/* Группы переключателей */
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -82,8 +78,14 @@
   gap: 2.5vh;
   margin-bottom: 2.5vh;
   align-items: center;
-
   padding-bottom: 1vh;
+}
+
+.radio-container {
+  position: relative;
+  width: 90%;
+  display: flex;
+  justify-content: center;
 }
 
 .radio-btn {
@@ -96,11 +98,21 @@
   font-family: 'GaramondBold', serif;
   font-size: 1.7vw;
   cursor: pointer;
-  /* border-radius: 4px; */
   transition: all 0.2s ease;
   width: 100%;
   text-align: center;
   z-index: 1;
+}
+
+.radio-btn:hover {
+  border-color: #888;
+}
+
+.radio-btn.active {
+  border-color: #373334;
+  background: #421208;
+  color: #cd574d;
+  transform: translateY(-0.25vh);
 }
 
 .button-frame {
@@ -119,51 +131,10 @@
 }
 
 .radio-btn.active + .button-frame {
-  filter: brightness(1.2) drop-shadow(0 0 5px rgba(55, 51, 52, 0.4));
+  filter: brightness(1.2) drop-shadow(0 0 0.5vh rgba(55, 51, 52, 0.4));
 }
 
-.radio-btn:hover {
-  border-color: #888;
-}
-
-.radio-btn.active {
-  border-color: #373334;
-  background: #421208;
-  color: #cd574d;
-  transform: translateY(-0.25vh);
-}
-
-.preview-area {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  /* для просмотра границ контейнера */
-  
-  /* background: rgba(0, 0, 0, 0.3); */
-  /* border-radius: 20px; */
-  /* border: 2px dashed rgba(255, 255, 255, 0.1); */
-
-  padding: 5px;
-  box-sizing: border-box;
-}
-
-.character-card {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.character-card img {
-  max-height: 100%; 
-  max-width: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7));
-  transition: transform 0.3s ease;
-}
-
+/* Фирменная кнопка продолжения */
 .start-game-btn {
   padding-top: 2vh;
   padding-bottom: 3vh;
@@ -182,9 +153,162 @@
   border: none;
   cursor: pointer;
   font-weight: bold;
+  transition: transform 0.1s ease;
 }
 
 .start-game-btn:active {
-  transform: translateY(3px);
-  /* box-shadow: 0 2px 0 #1e8449; */
+  transform: translateY(0.3vh);
+}
+
+
+/* ================= ПРАВАЯ ЧАСТЬ: ПРЕВЬЮ И ЛЕТОПИСЬ (70%) ================= */
+.preview-area {
+  width: 70vw;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Распределяем персонажа наверх, таблицу вниз */
+  align-items: center;
+  padding: 2vh 2vw;
+  gap: 2vh;
+}
+
+/* Карточка персонажа занимает верхнюю половину */
+.character-card {
+  width: 100%;
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.character-card img {
+  max-height: 100%; 
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1.5vh 2.5vh rgba(0,0,0,0.7));
+  transition: transform 0.3s ease;
+}
+
+
+/* ================= ИНТЕГРИРОВАННАЯ ТАБЛИЦА ЛИДЕРОВ ================= */
+.leaderboard-box {
+  width: 100%;
+  max-width: 42vw; /* Оптимальная ширина внутри зоны 70vw */
+  background: linear-gradient(135deg, #1a0502 0%, #0d0201 100%);
+  border: 0.375vh solid #444; /* Под стиль рамок кнопок */
+  border-radius: 0.5vh;
+  box-shadow: 0 1.5vh 3vh rgba(0, 0, 0, 0.8);
+  padding: 2vh 1.5vw;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.leaderboard-header {
+  text-align: center;
+  color: #ead7b3;
+  font-family: 'GaramondBold', serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1vh;
+  border-bottom: 0.15vh dashed rgba(234, 215, 179, 0.25);
+  padding-bottom: 0.8vh;
+  margin-bottom: 1.5vh;
+  text-shadow: 0.15vh 0.15vh 0.3vh #000;
+}
+
+.leaderboard-status {
+  text-align: center;
+  color: #ead7b3;
+  font-family: 'GaramondBold', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  padding: 3vh 0;
+  opacity: 0.7;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'GaramondBold', serif;
+}
+
+.leaderboard-table th {
+  color: #ead7b3;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05vw;
+  padding-bottom: 0.6vh;
+  border-bottom: 0.2vh solid #421208;
+  opacity: 0.8;
+}
+
+.leaderboard-table td {
+  padding: 0.8vh 0.5vw;
+  font-size: 1.1rem;
+  color: #ead7b3;
+  border-bottom: 0.15vh solid rgba(66, 18, 8, 0.2);
+}
+
+/* Колонки таблицы */
+.th-position, .td-position {
+  width: 15%;
+  text-align: center;
+}
+
+.th-name, .td-name {
+  width: 60%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.th-score, .td-score {
+  width: 25%;
+  text-align: right;
+  color: #cd574d; /* В тон активного текста из твоего меню */
+  font-weight: bold;
+}
+
+/* Топ-1 место */
+.row-rank-1 td {
+  background: rgba(66, 18, 8, 0.2);
+}
+.row-rank-1 .td-score {
+  color: #ffd700; /* Золото лидеру */
+  text-shadow: 0 0 0.8vh rgba(255, 215, 0, 0.4);
+}
+
+/* Адаптивный скроллбар для списка учеников */
+.leaderboard-table tbody {
+  display: block;
+  max-height: 22vh; /* Идеально ложится в интерфейс, не сжимая карточку */
+  overflow-y: auto;
+}
+
+.leaderboard-table thead, 
+.leaderboard-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Стилизация полосы прокрутки */
+.leaderboard-table tbody::-webkit-scrollbar {
+  width: 0.4vw;
+}
+
+.leaderboard-table tbody::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard-table tbody::-webkit-scrollbar-thumb {
+  background: #421208;
+  border-radius: 0.2vh;
+}
+
+.leaderboard-table tbody::-webkit-scrollbar-thumb:hover {
+  background: #5c1a0c;
 }
