@@ -219,14 +219,18 @@ const GameScreen = () => {
       setIsLocked(true);
       loadStageData(nextIdx);
     } else {
-      if (settings.isProgressLocked && reason !== "Время вышло") {
+      if (totalScore < 0 || totalScore === 0  || reason === "Время вышло") {
+        setSettings(prev => ({ ...prev, unlockedLevel: settings.currentLevel }));
+      }
+      else if (settings.isProgressLocked && reason !== "Время вышло") {
         let newLevel = settings.unlockedLevel;
         if (settings.currentLevel === 2) newLevel = Math.max(newLevel, 4);
-        else if (settings.currentLevel === 4) newLevel = 5;
-        else newLevel = settings.currentLevel + 1;
+        else if (settings.currentLevel === 4) newLevel = Math.max(newLevel, 5);
+        else if (newLevel !== 5) newLevel = settings.currentLevel + 1;
         setSettings(prev => ({ ...prev, unlockedLevel: newLevel }));
       }
       alert(reason === "Время вышло" ? "Время истекло! Сессия завершена." : "Все этапы пройдены!");
+      setSettings(prev => ({ ...prev, score: settings.score + totalScore }));
       setScreen('LEVELS');
     }
   };
@@ -322,31 +326,8 @@ const GameScreen = () => {
       </div>
 
       <div className="game-half right-side">
-        <div className="block-70 info-board">
-          
-          <div className="sub-col-40-new">
-            <div className="level-art-container">
-              <img 
-                src={`assets/levels/${settings.rank}/level_${settings.currentLevel}.png`} 
-                className="level-art-image" 
-                alt="art" 
-              />
-            </div>
-          </div>
-            {/* переделать под !магазин!  */}
-          <div className="sub-col-60-new">
-            <div className="shop-scroll font-main">
-              <h4>ИНФО</h4>
-              <p>Класс: {settings.grade}</p>
-              <p>Чин: {currentJob}</p>
-            </div>
-          </div>
-          
-        </div>
-
         <div className="block-30 stats-footer">
           <div className="timer-zone">
-
             <div className="score-counter-box font-main">
               <span className="score-label">ОЧКИ</span>
               <span className="score-value">{totalScore}</span>

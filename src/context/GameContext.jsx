@@ -12,6 +12,7 @@ export const GameProvider = ({ children }) => {
     isProgressLocked: false,
     currentLevel: 1,
     sessionID: '',
+    score: 0,
   });
 
   return (
