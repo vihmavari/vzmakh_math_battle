@@ -25,7 +25,6 @@ const GameScreen = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastStageScore, setLastStageScore] = useState(0);
 
-  const isSessionInitialized = useRef(false);
   const sessionIdRef = useRef(`${settings.name.split(" ")[0]}-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
 
   const getJobName = () => {
@@ -147,18 +146,7 @@ const GameScreen = () => {
   };
 
   useEffect(() => {
-    if (!isSessionInitialized.current) {
-      isSessionInitialized.current = true;
-      logToSheet({
-        sheet: "Список сессий",
-        sessionId: sessionIdRef.current,
-        startTime: new Date().toLocaleString(),
-        userName: settings.name || "Аноним",
-        grade: settings.grade,
-        rank: currentEstate
-      });
-      loadStageData(0);
-    }
+    loadStageData(0);
   }, []);
 
   useEffect(() => {
@@ -171,9 +159,32 @@ const GameScreen = () => {
     return () => clearInterval(timer);
   }, [isTimerActive, timeLeft]);
 
-  const handleStart = () => {
+  const handleStart = async () => {
     setIsLocked(false);
     setIsTimerActive(true);
+
+    let activeSessionID = settings.sessionID; 
+
+    if (!activeSessionID) {
+      const generatedID = `${settings.name.split(" ")[0]}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      
+      setSettings(prev => ({
+        ...prev,
+        sessionID: generatedID
+      }));
+      
+      activeSessionID = generatedID;
+
+      await logToSheet({
+        sheet: "Список сессий",
+        sessionId: generatedID,
+        startTime: new Date().toLocaleString(),
+        userName: settings.name || "Аноним",
+        grade: settings.grade,
+        rank: currentEstate
+      });
+    }
+
   };
 
   const handleFinish = async (reason = "Сдано") => {
@@ -195,7 +206,7 @@ const GameScreen = () => {
 
     await logToSheet({
       sheet: "Журнал",
-      sessionId: sessionIdRef.current,
+      sessionId: settings.sessionID,
       action: `${reason}: ${currentJob} (Этап ${currentStageIndex + 1})`,
       score: stageScore
     });
@@ -322,7 +333,7 @@ const GameScreen = () => {
               />
             </div>
           </div>
-
+            {/* переделать под !магазин!  */}
           <div className="sub-col-60-new">
             <div className="shop-scroll font-main">
               <h4>ИНФО</h4>
