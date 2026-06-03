@@ -193,24 +193,22 @@
   color: #ffd700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
-
-/* Контейнер таймера */
+  
 .circular-timer {
   position: relative;
-  width: 90px;  /* Чуть увеличили, чтобы добавить массивности кованым границам */
+  width: 90px;
   height: 90px;
-  background: radial-gradient(circle, #2a0a04 0%, #150301 100%); /* Глубокий костёрный фон внутри кольца */
+  background: radial-gradient(circle, #2a0a04 0%, #150301 100%);
   border-radius: 50%;
   box-shadow: 
-    0 4px 10px rgba(0, 0, 0, 0.9),              /* Внешняя тяжёлая тень */
-    inset 0 0 8px rgba(0, 0, 0, 0.8);           /* Внутренняя глубина */
-  border: 2px solid #3a2214;                    /* Деревянный или чугунный ободок вокруг прибора */
+    0 4px 10px rgba(0, 0, 0, 0.9),
+    inset 0 0 8px rgba(0, 0, 0, 0.8);
+  border: 2px solid #3a2214;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Поворот SVG, чтобы отсчёт шёл сверху (на 12 часов) */
 .timer-svg {
   position: absolute;
   top: 0;
@@ -220,36 +218,32 @@
   transform: rotate(-90deg);
 }
 
-/* Заднее кольцо (шкала прибора) */
 .timer-bg {
   fill: none; 
-  stroke: #422516;         /* Цвет старой потемневшей бронзы */
-  stroke-width: 3.5;       /* Сделали деления чуть весомее */
+  stroke: #422516;
+  stroke-width: 3.5;
   opacity: 0.7;
 }
 
-/* Заполняющаяся полоса времени */
 .timer-bar { 
   fill: none; 
-  stroke: #ffca28;         /* Благородное золото, не бьющее по глазам */
+  stroke: #ffca28;
   stroke-width: 3.5; 
   stroke-dasharray: 100; 
-  stroke-linecap: round;   /* Закруглили края полосы, так выглядит аккуратнее и «под старину» */
+  stroke-linecap: round;
   transition: stroke-dashoffset 1s linear; 
-  /* filter: drop-shadow(0px 0px 3px rgba(255, 202, 40, 0.5)); Лёгкое магическое свечение золота */
 }
 
-/* Текст с секундами внутри */
 .timer-text {
   position: absolute; 
   top: 50%; 
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.5rem;       /* Сделали крупнее для удобства детей */
+  font-size: 1.5rem;
   font-weight: bold;
-  color: #ead7b3;          /* Цвет пергамента, чтобы гармонировать с ИНФО */
+  color: #ead7b3;
   text-shadow: 
-    2px 2px 4px #000,      /* Мощная чёрная подложка, чтобы цифры не сливались с золотым кольцом */
+    2px 2px 4px #000,
     -1px -1px 0 #000,  
      1px -1px 0 #000,
     -1px  1px 0 #000,
