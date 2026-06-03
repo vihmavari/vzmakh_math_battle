@@ -98,7 +98,7 @@ const DifficultyScreen = () => {
     return Object.entries(userScores)
       .map(([name, totalScore]) => ({ name, totalScore }))
       .sort((a, b) => b.totalScore - a.totalScore)
-      .slice(0, 8);
+      .slice(0, 30);
   };
 
   const currentLeaders = getFilteredLeaderboard();
