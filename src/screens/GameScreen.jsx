@@ -19,13 +19,39 @@ const GameScreen = () => {
   const [allStages, setAllStages] = useState([]);
   const [stageConfig, setStageConfig] = useState({ score: 10, penalty: 0 });
   const [maxTime, setMaxTime] = useState({ time: 120 });
-
+  
   const [totalScore, setTotalScore] = useState(0);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastStageScore, setLastStageScore] = useState(0);
 
-  const sessionIdRef = useRef(`${settings.name.split(" ")[0]}-${Date.now()}-${Math.floor(Math.random() * 1000)}`);
+  const isDataLoadedRef = useRef(false);
+
+  const [showTimeBonus, setShowTimeBonus] = useState(false);
+  const [showScoreMinus, setShowScoreMinus] = useState(false);
+
+  const handleAddComponents = async () => {
+    if (isLocked || totalScore < 5 || timeLeft > maxTime - 6) return;
+
+    setTotalScore(prev => prev - 5);
+    setTimeLeft(prev => prev + 5);
+
+    action = "Покупка времени (5 сек)"
+    
+    await logToSheet({
+      sheet: "Журнал",
+      sessionId: settings.sessionID,
+      action: `${action}: ${currentJob} (Этап ${currentStageIndex + 1})`,
+      score: -5
+    });
+
+    setShowTimeBonus(true);
+    setShowScoreMinus(true);
+
+    setTimeout(() => {
+      setShowTimeBonus(false);
+      setShowScoreMinus(false);
+    }, 1000);
+  };
 
   const getJobName = () => {
     const jobs = {
@@ -100,7 +126,7 @@ const GameScreen = () => {
       const config = parseStageInfo(stages[stageIdx]);
       setStageConfig({ score: config.reward, penalty: config.penalty });
       setMaxTime({ time:config.time });
-      setTimeLeft(config.time); // Устанавливаем время этапа
+      setTimeLeft(config.time);
 
       const tasksUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(config.type)}`;
       const tasksRes = await fetch(tasksUrl);
@@ -146,7 +172,10 @@ const GameScreen = () => {
   };
 
   useEffect(() => {
-    loadStageData(0);
+    if (!isDataLoadedRef.current) {
+      isDataLoadedRef.current = true;
+      loadStageData(0);
+    }
   }, []);
 
   useEffect(() => {
@@ -184,7 +213,6 @@ const GameScreen = () => {
         rank: currentEstate
       });
     }
-
   };
 
   const handleFinish = async (reason = "Сдано") => {
@@ -201,7 +229,6 @@ const GameScreen = () => {
 
     setLastStageScore(stageScore);
     setIsSubmitting(true);
-
     setTotalScore(prev => prev + stageScore);
 
     await logToSheet({
@@ -235,12 +262,15 @@ const GameScreen = () => {
     }
   };
 
-  const strokeDashoffset = 100 - (timeLeft / maxTime.time) * 100;
+  const timePercentage = Math.min((timeLeft / maxTime.time) * 100, 100);
+  const strokeDashoffset = 100 - timePercentage;
 
-  if (isLoading) return <div className="loading font-main">Сохранение прогресса...</div>;
+  if (isLoading) return <div className="loading font-main">Загрузка заданий...</div>;
 
   return (
-    <div className="game-screen-wrapper">
+    <div className="game-screen-layout">
+      
+      {/* МГНОВЕННЫЙ ЭКРАН СОХРАНЕНИЯ */}
       {isSubmitting && (
         <div className="submit-overlay-screen">
           <div className="submit-overlay-content font-main">
@@ -256,9 +286,12 @@ const GameScreen = () => {
         </div>
       )}
 
-      <div className="game-half left-side">
-        <div className="block-30 progress-header">
-          <div className="stages-icons-row full-height-row">
+      {/* ВЕРХНЯЯ УЗКАЯ ПАНЕЛЬ (ТЕКУЩИЙ ТУР + ТАЙМЕР + ОЧКИ + КНОПКА) */}
+      <div className="game-header-panel">
+        
+        {/* Отображение туров (этапов) */}
+        <div className="header-stages-zone">
+          <div className="stages-icons-row">
             {allStages.map((stageStr, index) => {
               const config = parseStageInfo(stageStr);
               if (!config) return null;
@@ -275,28 +308,64 @@ const GameScreen = () => {
                     <img 
                       src={`assets/ui/step_icon_${iconNum}.png`} 
                       alt={`Stage ${index + 1}`} 
-                      className="step-icon-img-large"
+                      className="step-icon-img-header"
                     />
                   </div>
-                  <span className="step-reward-label font-main">
-                    <br/>{config.reward} б.
-                  </span>
+                  <span className="step-reward-label font-main">{config.reward} б.</span>
                 </div>
               );
             })}
           </div>
         </div>
-        
-        <div className="block-70 main-play-field">
-          {isLocked && (
-            <div className="fog-overlay">
-              <img src='assets/ui/blocker.png' className="pic lower"></img>
-              <img src='assets/ui/blocker_upper.png' className="pic upper"></img>
-              <button className="start-btn-big font-main" onClick={handleStart}>
-                {currentStageIndex === 0 ? "В БОЙ!" : "ПРОДОЛЖИТЬ"}
-              </button>
+
+        <div className="header-status-zone">
+          
+          {/* Активная кнопка покупки времени (выключается, если очков < 5 или игра на паузе) */}
+          <button 
+            className="header-extra-btn font-main" 
+            onClick={handleAddComponents}
+            disabled={isLocked || totalScore < 5}
+          >
+            Добавить время
+          </button>
+
+          {/* Счётчик очков с контейнером для индикации */}
+          <div className="score-container-wrapper">
+            {showScoreMinus && <div className="floating-indicator minus-score font-main">-5 б.</div>}
+            <div className="score-counter-box font-main">
+              <span className="score-label">ОЧКИ</span>
+              <span className="score-value">{totalScore}</span>
             </div>
-          )}
+          </div>
+
+          {/* Компактный круглый таймер с контейнером для индикации */}
+          <div className="timer-container-wrapper">
+            {showTimeBonus && <div className="floating-indicator plus-time font-main">+5с</div>}
+            <div className={`circular-timer ${timeLeft > maxTime.time ? 'overcharged' : ''}`}>
+              <svg viewBox="0 0 36 36" className="timer-svg">
+                <circle className="timer-bg" cx="18" cy="18" r="16" />
+                <circle className="timer-bar" cx="18" cy="18" r="16" style={{ strokeDashoffset }} />
+              </svg>
+              <div className="timer-text">{timeLeft}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* НИЖНЯЯ ПРОСТОРНАЯ ОБЛАСТЬ С ПРИМЕРАМИ */}
+      <div className="game-bottom-field">
+        {isLocked && (
+          <div className="fog-overlay">
+            <img src='assets/ui/blocker.png' className="pic lower" alt="lower blocker"></img>
+            <img src='assets/ui/blocker_upper.png' className="pic upper" alt="upper blocker"></img>
+            <button className="start-btn-big font-main" onClick={handleStart}>
+              {currentStageIndex === 0 ? "В БОЙ!" : "ПРОДОЛЖИТЬ"}
+            </button>
+          </div>
+        )}
+
+        <div className="task-container-scroll">
           <div className="task-list">
             {tasks.map((task, i) => (
               <div key={task.id} className="task-item">
@@ -315,34 +384,17 @@ const GameScreen = () => {
               </div>
             ))}
           </div>
-          <button 
-              className="finish-btn font-main" 
-              onClick={() => handleFinish()} 
-              disabled={isLocked}
-            >
-              СДАТЬ
-            </button>
         </div>
+
+        <button 
+          className="finish-btn font-main" 
+          onClick={() => handleFinish()} 
+          disabled={isLocked}
+        >
+          СДАТЬ
+        </button>
       </div>
 
-      <div className="game-half right-side">
-        <div className="block-30 stats-footer">
-          <div className="timer-zone">
-            <div className="score-counter-box font-main">
-              <span className="score-label">ОЧКИ</span>
-              <span className="score-value">{totalScore}</span>
-            </div>
-
-            <div className="circular-timer">
-              <svg viewBox="0 0 36 36" className="timer-svg">
-                <circle className="timer-bg" cx="18" cy="18" r="16" />
-                <circle className="timer-bar" cx="18" cy="18" r="16" style={{ strokeDashoffset }} />
-              </svg>
-              <div className="timer-text">{timeLeft}</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
