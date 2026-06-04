@@ -39,15 +39,15 @@ const GameScreen = () => {
     addPoints(-5);
     setTimeLeft(prev => prev + 5);
 
+    setShowTimeBonus(true);
+    setShowScoreMinus(true);
+
     await logToSheet({
       sheet: "Журнал",
       sessionId: settings.sessionID,
       action: `Покупка времени (5 сек): ${currentJob} (Этап ${currentStageIndex + 1})`,
       score: -5
     });
-
-    setShowTimeBonus(true);
-    setShowScoreMinus(true);
 
     setTimeout(() => {
       setShowTimeBonus(false);
