@@ -161,3 +161,62 @@
   box-shadow: 0 0.5vh 2vh rgba(255, 215, 0, 0.4);
   transition: all 0.2s ease;
 }
+
+
+/* ================= КЛАССЫ ДЛЯ ЛИНЕЙНОГО ПРОГРЕССА ================= */
+
+/* ТЕКУЩИЙ ДОСТУПНЫЙ ЭТАП (Пульсирует или выделяется, манит кликнуть) */
+.level-item.current .level-image-container {
+  /* Твоя стандартная обводка */
+  filter: drop-shadow(0.25vh 0.25vh 0 #886a4e) 
+          drop-shadow(-0.25vh -0.25vh 0 #886a4e)
+          drop-shadow(0.25vh 0.25vh 0 #886a4e)
+          drop-shadow(-0.25vh -0.25vh 0 #886a4e);
+}
+
+/* ПРОЙДЕННЫЙ ЭТАП (Повторно зайти нельзя) */
+.level-item.passed {
+  cursor: not-allowed;
+  pointer-events: none; /* Запрещаем любые триггеры мыши */
+}
+
+.level-item.passed .level-image-container {
+  /* Делаем картинку полупрозрачной и слегка уводим в сепию/темноту, 
+     показывая, что этап в прошлом */
+  filter: brightness(0.5) sepia(0.3)
+          drop-shadow(0.25vh 0.25vh 0 #554333) 
+          drop-shadow(-0.25vh -0.25vh 0 #554333);
+  opacity: 0.7;
+}
+
+.level-item.passed .level-label {
+  background: #4a3b2c;
+  color: #a3907c;
+  border-color: #554333;
+  box-shadow: none;
+}
+
+/* Красивая плашка "Выполнено" поверх картинки */
+.passed-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg); /* Эффект штампа */
+  background: rgba(160, 42, 24, 0.9); /* Твой темно-красный цвет */
+  color: #fff;
+  border: 0.25vh solid #ead7b3;
+  padding: 0.8vh 1.5vw;
+  font-family: 'GaramondBold', serif;
+  font-size: 3vh;
+  text-transform: uppercase;
+  letter-spacing: 0.1vw;
+  border-radius: 0.4vh;
+  box-shadow: 0 0.5vh 1vh rgba(0,0,0,0.6);
+  z-index: 5;
+}
+
+/* БУДУЩИЕ ЗАБЛОКИРОВАННЫЕ ЭТАПЫ (Остаются без изменений, как мы делали) */
+.level-item.locked {
+  cursor: not-allowed;
+  pointer-events: none;
+}

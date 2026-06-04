@@ -31,13 +31,20 @@ const GameScreen = () => {
   const [showScoreMinus, setShowScoreMinus] = useState(false);
 
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '' });
+  const [isTimeWarning, setIsTimeWarning] = useState(false);
   
 
   const handleAddComponents = async () => {
     if (isLocked || settings.score < 5 || timeLeft > maxTime - 6) return;
 
     addPoints(-5);
-    setTimeLeft(prev => prev + 5);
+    setTimeLeft(prev => {
+      const newTime = prev + 5;
+      if (newTime > 10) {
+        setIsTimeWarning(false);
+      }
+      return newTime;
+    });
 
     setShowTimeBonus(true);
     setShowScoreMinus(true);
@@ -144,6 +151,7 @@ const GameScreen = () => {
       setStageConfig({ score: config.reward, penalty: config.penalty });
       setMaxTime({ time:config.time });
       setTimeLeft(config.time);
+      setIsTimeWarning(false);
 
       const tasksUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(config.type)}`;
       const tasksRes = await fetch(tasksUrl);
@@ -198,8 +206,18 @@ const GameScreen = () => {
   useEffect(() => {
     let timer;
     if (isTimerActive && timeLeft > 0) {
-      timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+      timer = setInterval(() => {
+        setTimeLeft(prev => {
+          const nextTime = prev - 1;
+          // Если осталось 10 секунд и меньше — включаем мигалку
+          if (nextTime <= 10 && nextTime > 0) {
+            setIsTimeWarning(true);
+          }
+          return nextTime;
+        });
+      }, 1000);
     } else if (timeLeft === 0 && isTimerActive) {
+      setIsTimeWarning(false);
       handleFinish("Время вышло");
     }
     return () => clearInterval(timer);
@@ -234,6 +252,7 @@ const GameScreen = () => {
 
   const handleFinish = async (reason = "Сдано") => {
     setIsTimerActive(false);
+    setIsTimeWarning(false);
     
     let stageScore = 0;
     tasks.forEach((task, i) => {
@@ -258,37 +277,38 @@ const GameScreen = () => {
     setIsSubmitting(false);
 
     const nextIdx = currentStageIndex + 1;
+    
     if (nextIdx < allStages.length && reason !== "Время вышло") {
       setCurrentStageIndex(nextIdx);
       setIsLocked(true);
       loadStageData(nextIdx);
     } else {
-      if (settings.score < 0  || reason === "Время вышло") {
+      if (reason === "Время вышло" || settings.score + stageScore < 0) {
+        // тут выход из игры даже не переходя на LevelScreen, показать экран с результатом
         setSettings(prev => ({ ...prev, unlockedLevel: settings.currentLevel }));
+      } else if (settings.isProgressLocked) {
+        // let newLevel = Math.min(settings.unlockedLevel + 1, 5);
+        // if (settings.currentLevel === 2) newLevel = Math.max(newLevel, 4);
+        // else if (settings.currentLevel === 4) newLevel = Math.max(newLevel, 5);
+        // else if (newLevel < 5) newLevel = Math.max(newLevel, settings.currentLevel + 1);
+        setSettings(prev => ({ ...prev, unlockedLevel: Math.min(settings.unlockedLevel + 1, 5) }));
       }
-      else if (settings.isProgressLocked && reason !== "Время вышло") {
-        let newLevel = settings.unlockedLevel;
-        if (settings.currentLevel === 2) newLevel = Math.max(newLevel, 4);
-        else if (settings.currentLevel === 4) newLevel = Math.max(newLevel, 5);
-        else if (newLevel < 5) newLevel = Math.max(newLevel, settings.currentLevel + 1);
-        setSettings(prev => ({ ...prev, unlockedLevel: newLevel }));
-      }
-      if (settings.score < 0) {
+
+      // Настройка алертов выхода
+      if (settings.score + stageScore < 0 || reason === "Время вышло") {
         setAlertConfig({
           isOpen: true,
-          title: "Неудача!",
-          message: "Эта ступень не покорилась тебе, попробуй ещё раз!"
+          title: reason === "Время вышло" ? "Время истекло!" : "Неудача!",
+          message: reason === "Время вышло" ? "Ты не уложился в отведенное время. Попробуй еще раз!" : "Эта ступень не покорилась тебе, попробуй её пройти снова!"
         });
       } else {
         setAlertConfig({
           isOpen: true,
-          title: reason === "Время вышло" ? "Время истекло!" : "Поздравляю!",
-          message: reason === "Время вышло" ? "Текущий этап прерван." : "Ты переходишь на ступень выше! Удачи в следующем турнире!"
+          title: "Поздравляю!",
+          message: "Ты переходишь на ступень выше! Удачи в следующем турнире!"
         });
       }
-      console.log(settings.score)
     }
-    
   };
 
   const timePercentage = Math.min((timeLeft / maxTime.time) * 100, 100);
@@ -312,6 +332,13 @@ const GameScreen = () => {
             <p className="submit-loader-text">Сохранение прогресса...</p>
             <div className="submit-mini-spinner"></div>
           </div>
+        </div>
+      )}
+
+      {/* ВСПЛЫВАЮЩЕЕ МИГАЮЩЕЕ ПРЕДУПРЕЖДЕНИЕ */}
+      {isTimeWarning && (
+        <div className="time-warning-toast font-main">
+          ⏱ Время на исходе! Докупи секунды!
         </div>
       )}
 
@@ -370,17 +397,17 @@ const GameScreen = () => {
           {/* Компактный круглый таймер с контейнером для индикации */}
           <div className="timer-container-wrapper">
             {showTimeBonus && <div className="floating-indicator plus-time font-main">+5с</div>}
-            <div className={`circular-timer ${timeLeft > maxTime.time ? 'overcharged' : ''}`}>
+            <div className={`circular-timer ${timeLeft > maxTime.time ? 'overcharged' : ''} ${isTimeWarning ? 'critical-pulse' : ''}`}>
               <svg viewBox="0 0 36 36" className="timer-svg">
                 <circle className="timer-bg" cx="18" cy="18" r="16" />
                 <circle className="timer-bar" cx="18" cy="18" r="16" style={{ strokeDashoffset }} />
               </svg>
-              <div className="timer-text">{timeLeft}</div>
-            </div>
+            <div className="timer-text">{timeLeft}</div>
           </div>
-
         </div>
+
       </div>
+    </div>
 
       {/* НИЖНЯЯ ПРОСТОРНАЯ ОБЛАСТЬ С ПРИМЕРАМИ */}
       <div className="game-bottom-field">

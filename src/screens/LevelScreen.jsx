@@ -14,8 +14,10 @@ const LevelScreen = () => {
   // Динамически определяем иконку в зависимости от ранга
   const headerIcon = `assets/levels/${folder}_level.png`;
 
+  const activeLevel = settings.unlockedLevel || 1;
+
   const handleLevelClick = (level) => {
-    if (level <= settings.unlockedLevel) {
+    if (level === activeLevel) {
       if (!settings.isProgressLocked) {
         setSettings(prev => ({ 
           ...prev, 
@@ -54,11 +56,19 @@ const LevelScreen = () => {
 
       <div className="level-row">
         {levels.map((lvl) => {
-          const isLocked = lvl > settings.unlockedLevel;
+          const isPassed = lvl < activeLevel;    // Уровень уже позади
+          const isCurrent = lvl === activeLevel; // Уровень нужно проходить сейчас
+          const isLocked = lvl > activeLevel;    // Уровень еще заблокирован
+
+          let itemClass = "level-item";
+          if (isPassed) itemClass += " passed";
+          if (isCurrent) itemClass += " available current";
+          if (isLocked) itemClass += " locked";
+
           return (
             <div 
               key={lvl} 
-              className={`level-item ${isLocked ? 'locked' : 'available'}`}
+              className={itemClass}
               onClick={() => handleLevelClick(lvl)}
             >
               <div className="level-image-container">
@@ -67,8 +77,13 @@ const LevelScreen = () => {
                   alt={`Этап ${lvl}`} 
                   className="level-img-content"
                 />
+                
+                {/* Если уровень пройден — вешаем декоративную метку */}
+                {isPassed && <div className="passed-badge">Выполнено</div>}
               </div>
-              <div className="level-label" style={{ fontFamily: "CiryllicHover" }}>{level_names[lvl-1]}</div>
+              <div className="level-label" style={{ fontFamily: "CiryllicHover" }}>
+                {level_names[lvl-1]}
+              </div>
             </div>
           );
         })}

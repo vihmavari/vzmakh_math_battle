@@ -8,7 +8,7 @@ export const GameProvider = ({ children }) => {
     grade: 3,
     rank: 'citizen',
     name: '',
-    unlockedLevel: 2,
+    unlockedLevel: 1,
     isProgressLocked: false,
     currentLevel: 1,
     sessionID: '',
