@@ -37,6 +37,23 @@ const GameScreen = () => {
   const [isGameFinished, setIsGameFinished] = useState(false);
   const [finishReason, setFinishReason] = useState("");
   
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.code === 'KeyX') {
+        e.preventDefault(); 
+        if (!isLocked && !isSubmitting && !isGameFinished) {
+          console.log("Сессия прервана администратором через горячие клавиши");
+          handleFinish("Прервано");
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLocked, isSubmitting, isGameFinished, tasks, answers, stageConfig, settings]);
 
   const handleAddComponents = async () => {
     if (isLocked || settings.score < 5) return;
@@ -495,7 +512,11 @@ const GameScreen = () => {
       {/* ВСПЛЫВАЮЩЕЕ МИГАЮЩЕЕ ПРЕДУПРЕЖДЕНИЕ */}
       {isTimeWarning && (
         <div className="time-warning-toast font-main">
-          ⏱ Время на исходе! Докупи секунды!
+          {settings.score >= 5 ? (
+            <>⏱ Время на исходе! Докупи секунды!</>
+          ) : (
+            <>⏱ Время на исходе! Поторопись!</>
+          )}
         </div>
       )}
 
@@ -585,8 +606,10 @@ const GameScreen = () => {
         <div className="task-container-scroll">
           <div className="task-list">
             {tasks.map((task, i) => {
-              const isEquation = task.question.toLowerCase().includes('x');
-              const isTextTask = !(task.question.includes('+') || task.question.includes('•') || task.question.includes(':') || task.question.includes('−')) && !isEquation;
+              const config = parseStageInfo(allStages[currentStageIndex]);
+              const taskType = config?.type?.toLowerCase() || 'примеры';
+              const isTextTask = taskType === 'задачи';
+              const isEquation = taskType === 'уравнения';
 
               let itemClass = "task-item";
               if (isTextTask) itemClass += " text-task-mode";
