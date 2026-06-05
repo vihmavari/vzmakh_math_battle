@@ -21,21 +21,20 @@ const GameScreen = () => {
   const [stageConfig, setStageConfig] = useState({ score: 10, penalty: 0 });
   const [maxTime, setMaxTime] = useState({ time: 120 });
   
-  const [totalScore, setTotalScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastStageScore, setLastStageScore] = useState(0);
 
   const isDataLoadedRef = useRef(false);
 
-  const [showTimeBonus, setShowTimeBonus] = useState(false);
-  const [showScoreMinus, setShowScoreMinus] = useState(false);
+  const [timeBonusKey, setTimeBonusKey] = useState(0);
+  const [scoreMinusKey, setScoreMinusKey] = useState(0);
 
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '' });
   const [isTimeWarning, setIsTimeWarning] = useState(false);
   
 
   const handleAddComponents = async () => {
-    if (isLocked || settings.score < 5 || timeLeft > maxTime - 6) return;
+    if (isLocked || settings.score < 5) return;
 
     addPoints(-5);
     setTimeLeft(prev => {
@@ -46,8 +45,8 @@ const GameScreen = () => {
       return newTime;
     });
 
-    setShowTimeBonus(true);
-    setShowScoreMinus(true);
+    setTimeBonusKey(Date.now());
+    setScoreMinusKey(Date.now());
 
     await logToSheet({
       sheet: "Журнал",
@@ -55,11 +54,6 @@ const GameScreen = () => {
       action: `Покупка времени (5 сек): ${currentJob} (Этап ${currentStageIndex + 1})`,
       score: -5
     });
-
-    setTimeout(() => {
-      setShowTimeBonus(false);
-      setShowScoreMinus(false);
-    }, 1000);
   };
 
   const getJobName = () => {
@@ -163,11 +157,12 @@ const GameScreen = () => {
           id: `t-${i}-${stageIdx}`,
           estate: cols[0]?.replace(/"/g, '').trim(),
           job: cols[1]?.replace(/"/g, '').trim(),
-          grade: cols[2]?.replace(/"/g, '').trim(),
-          question: cols[3]?.replace(/"/g, '').trim(),
-          correctAnswer: cols[4]?.replace(/"/g, '').trim()
+          tour: cols[2]?.replace(/"/g, '').trim(),
+          grade: cols[3]?.replace(/"/g, '').trim(),
+          question: cols[4]?.replace(/"/g, '').trim(),
+          correctAnswer: cols[5]?.replace(/"/g, '').trim()
         };
-      }).filter(t => t.estate === currentEstate && t.job === currentJob && String(t.grade) === String(settings.grade));
+      }).filter(t => t.estate === currentEstate && t.job === currentJob && String(t.tour) === String(stageIdx + 1) && String(t.grade) === String(settings.grade));
 
       setTasks(filtered.sort(() => 0.5 - Math.random()).slice(0, config.count));
       setAnswers(Array(config.count).fill(''));
@@ -287,10 +282,6 @@ const GameScreen = () => {
         // тут выход из игры даже не переходя на LevelScreen, показать экран с результатом
         setSettings(prev => ({ ...prev, unlockedLevel: settings.currentLevel }));
       } else if (settings.isProgressLocked) {
-        // let newLevel = Math.min(settings.unlockedLevel + 1, 5);
-        // if (settings.currentLevel === 2) newLevel = Math.max(newLevel, 4);
-        // else if (settings.currentLevel === 4) newLevel = Math.max(newLevel, 5);
-        // else if (newLevel < 5) newLevel = Math.max(newLevel, settings.currentLevel + 1);
         setSettings(prev => ({ ...prev, unlockedLevel: Math.min(settings.unlockedLevel + 1, 5) }));
       }
 
@@ -387,21 +378,25 @@ const GameScreen = () => {
 
           {/* Счётчик очков с контейнером для индикации */}
           <div className="score-container-wrapper">
-            {showScoreMinus && <div className="floating-indicator minus-score font-main">-5 б.</div>}
-            <div className="score-counter-box font-main">
-              <span className="score-label">ОЧКИ</span>
-              <span className="score-value">{settings.score}</span>
-            </div>
+          {scoreMinusKey > 0 && (
+            <div key={scoreMinusKey} className="floating-indicator minus-score font-main">-5 б.</div>
+          )}
+          <div className="score-counter-box font-main">
+            <span className="score-label">ОЧКИ</span>
+            <span className="score-value">{settings.score}</span>
           </div>
+        </div>
 
-          {/* Компактный круглый таймер с контейнером для индикации */}
-          <div className="timer-container-wrapper">
-            {showTimeBonus && <div className="floating-indicator plus-time font-main">+5с</div>}
-            <div className={`circular-timer ${timeLeft > maxTime.time ? 'overcharged' : ''} ${isTimeWarning ? 'critical-pulse' : ''}`}>
-              <svg viewBox="0 0 36 36" className="timer-svg">
-                <circle className="timer-bg" cx="18" cy="18" r="16" />
-                <circle className="timer-bar" cx="18" cy="18" r="16" style={{ strokeDashoffset }} />
-              </svg>
+        {/* Находится внутри timer-container-wrapper */}
+        <div className="timer-container-wrapper">
+          {timeBonusKey > 0 && (
+            <div key={timeBonusKey} className="floating-indicator plus-time font-main">+5с</div>
+          )}
+          <div className={`circular-timer ${timeLeft > maxTime.time ? 'overcharged' : ''} ${isTimeWarning ? 'critical-pulse' : ''}`}>
+            <svg viewBox="0 0 36 36" className="timer-svg">
+              <circle className="timer-bg" cx="18" cy="18" r="16" />
+              <circle className="timer-bar" cx="18" cy="18" r="16" style={{ strokeDashoffset }} />
+            </svg>
             <div className="timer-text">{timeLeft}</div>
           </div>
         </div>
