@@ -418,22 +418,52 @@ const GameScreen = () => {
 
         <div className="task-container-scroll">
           <div className="task-list">
-            {tasks.map((task, i) => (
-              <div key={task.id} className="task-item">
-                <span className="task-text">{task.question} = </span>
-                <input 
-                  type="text" 
-                  className="math-input" 
-                  disabled={isLocked}
-                  value={answers[i]}
-                  onChange={(e) => {
-                    const newAns = [...answers];
-                    newAns[i] = e.target.value;
-                    setAnswers(newAns);
-                  }}
-                />
-              </div>
-            ))}
+            {tasks.map((task, i) => {
+              const isEquation = task.question.toLowerCase().includes('x');
+
+              return (
+                <div 
+                  key={task.id} 
+                  className={`task-item ${isEquation ? 'equation-mode' : 'classic-mode'}`}
+                >
+                  {isEquation ? (
+                    <>
+                      <div className="equation-text">{task.question}</div>
+                      <div className="equation-answer-row">
+                        <span className="equation-prefix">x = </span>
+                        <input 
+                          type="text" 
+                          className="math-input equation-input" 
+                          disabled={isLocked}
+                          value={answers[i]}
+                          onChange={(e) => {
+                            const newAns = [...answers];
+                            newAns[i] = e.target.value;
+                            setAnswers(newAns);
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    /* СТАНДАРТНАЯ ВЕРСТКА: Всё в одну линию для обычных примеров */
+                    <>
+                      <span className="task-text">{task.question} = </span>
+                      <input 
+                        type="text" 
+                        className="math-input" 
+                        disabled={isLocked}
+                        value={answers[i]}
+                        onChange={(e) => {
+                          const newAns = [...answers];
+                          newAns[i] = e.target.value;
+                          setAnswers(newAns);
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -442,7 +472,7 @@ const GameScreen = () => {
           onClick={() => handleFinish()} 
           disabled={isLocked || isSubmitting}
         >
-          {isSubmitting ? "ОТПРАВКА..." : "СДАТЬ"}
+          {isSubmitting ? "ОТПРАВКА..." : "ДАЛЬШЕ"}
         </button>
       </div>
       <GameAlert 
