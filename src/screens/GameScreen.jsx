@@ -191,6 +191,116 @@ const GameScreen = () => {
     return 4;
   };
 
+  const renderMathText = (text) => {
+    if (!text) return "";
+
+    // 1. Универсальное правило для СТЕПЕНЕЙ:
+    // Основание: либо выражение в скобках (x+1), либо одиночный символ x или 2
+    // Показатель: либо выражение в скобках (n-1), либо группа символов/цифр
+    const powerRegex = /(\(([^)]+)\)|[a-zA-Z0-9])\^(\(([^)]+)\)|[a-zA-Z0-9]+)/g;
+    
+    // 2. Универсальное правило для ДРОБЕЙ:
+    // Числитель/Знаменатель: либо всё, что внутри круглых скобок (...), либо просто идущие подряд буквы и цифры
+    const fractionRegex = /(\(([^)]+)\)|[a-zA-Z0-9]+)\/(\(([^)]+)\)|[a-zA-Z0-9]+)/g;
+
+    if (!text.includes('^') && !text.includes('/')) {
+      return text;
+    }
+
+    let elements = [{ type: 'text', content: text }];
+
+    // --- ЭТАП 1: Выделяем степени ---
+    let updatedElements = [];
+    elements.forEach(el => {
+      if (el.type !== 'text') {
+        updatedElements.push(el);
+        return;
+      }
+
+      let lastIndex = 0;
+      let match;
+      powerRegex.lastIndex = 0;
+
+      while ((match = powerRegex.exec(el.content)) !== null) {
+        if (match.index > lastIndex) {
+          updatedElements.push({ type: 'text', content: el.content.substring(lastIndex, match.index) });
+        }
+        
+        // Если основание было в скобках, берем чистый текст из группы 2, иначе из группы 1
+        const base = match[2] ? match[2] : match[1];
+        // Если степень была в скобках, берем чистый текст из группы 4, иначе из группы 3
+        const exponent = match[4] ? match[4] : match[3];
+
+        updatedElements.push({ type: 'power', base, exponent });
+        lastIndex = powerRegex.lastIndex;
+      }
+      
+      if (lastIndex < el.content.length) {
+        updatedElements.push({ type: 'text', content: el.content.substring(lastIndex) });
+      }
+    });
+    elements = updatedElements;
+
+    // --- ЭТАП 2: Выделяем дроби ---
+    updatedElements = [];
+    elements.forEach(el => {
+      if (el.type !== 'text') {
+        updatedElements.push(el);
+        return;
+      }
+
+      let lastIndex = 0;
+      let match;
+      fractionRegex.lastIndex = 0;
+
+      while ((match = fractionRegex.exec(el.content)) !== null) {
+        if (match.index > lastIndex) {
+          updatedElements.push({ type: 'text', content: el.content.substring(lastIndex, match.index) });
+        }
+        
+        // match[1] — весь числитель. Если в нем есть скобки, match[2] вытащит то, что ВНУТРИ них
+        const numerator = match[2] ? match[2] : match[1];
+        
+        // match[3] — весь знаменатель. Если в нем есть скобки, match[4] вытащит то, что ВНУТРИ них
+        const denominator = match[4] ? match[4] : match[3];
+
+        updatedElements.push({ type: 'fraction', num: numerator, denom: denominator });
+        lastIndex = fractionRegex.lastIndex;
+      }
+
+      if (lastIndex < el.content.length) {
+        updatedElements.push({ type: 'text', content: el.content.substring(lastIndex) });
+      }
+    });
+    elements = updatedElements;
+
+    // --- ЭТАП 3: Рендеринг в JSX ---
+    return (
+      <span className="math-row-render">
+        {elements.map((el, index) => {
+          if (el.type === 'power') {
+            return (
+              <span key={`pwr-${index}`} className="power-wrapper">
+              {renderMathText(el.base)}<sup>{renderMathText(el.exponent)}</sup>
+            </span>
+          );
+        }
+        if (el.type === 'fraction') {
+          return (
+            <span key={`frac-${index}`} className="fraction-wrapper">
+              <span className="fraction-numerator">{renderMathText(el.num)}</span>
+              <span className="fraction-line"></span>
+              <span className="fraction-denominator">{renderMathText(el.denom)}</span>
+            </span>
+          );
+        }
+        return <span key={`txt-${index}`}>{el.content}</span>;
+      })}
+    </span>
+  );
+};
+
+
   useEffect(() => {
     if (!isDataLoadedRef.current) {
       isDataLoadedRef.current = true;
@@ -451,7 +561,7 @@ const GameScreen = () => {
                   ) : isEquation ? (
                     /* ВЕРСТКА ДЛЯ УРАВНЕНИЙ */
                     <>
-                      <div className="equation-text">{task.question}</div>
+                      <div className="equation-text">{renderMathText(task.question)}</div>
                       <div className="equation-answer-row">
                         <span className="equation-prefix">x = </span>
                         <input 
@@ -470,7 +580,7 @@ const GameScreen = () => {
                   ) : (
                     /* СТАНДАРТНАЯ ВЕРСТКА ДЛЯ ПРИМЕРА */
                     <>
-                      <span className="task-text">{task.question} = </span>
+                      <span className="task-text">{renderMathText(task.question)} = </span>
                       <input 
                         type="text" 
                         className="math-input" 

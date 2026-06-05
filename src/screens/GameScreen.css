@@ -309,6 +309,67 @@ html {
   cursor: not-allowed;
 }
 
+/* Контейнер для строки, где перемешан текст и дроби */
+.math-row-render {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vw;
+  vertical-align: middle;
+}
+
+.math-row-render > span {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  /* font-family: monospace; */
+  font-size: 1.8rem;
+}
+
+/* Возвращаем степеням правильное текстовое выравнивание */
+.math-row-render > span.power-wrapper {
+  display: inline-block;     /* Отменяем флексбокс конкретно для степеней */
+  vertical-align: baseline;  /* Ставим основание строго на базовую линию строки */
+  align-items: flex-start;   /* Сбрасываем центрирование */
+  padding: 0 0.2vw;
+}
+
+/* Настройки для самого верхнего индекса */
+.power-wrapper sup {
+  font-size: 1.1rem;
+  color: #ffd700;
+  vertical-align: super;     /* Принудительно отправляем степень наверх */
+  line-height: 0;            /* Чтобы степень не увеличивала общую высоту строки */
+}
+
+.fraction-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  padding: 0 0.1vw;
+}
+
+.fraction-numerator {
+  font-size: 1.3rem;
+  line-height: 1;
+  padding-bottom: 0.2vh;
+}
+
+.fraction-line {
+  width: 100%;
+  border-bottom: 0.25vh solid #ead7b3;
+  margin: 0.1vh 0;
+}
+
+.fraction-denominator {
+  font-size: 1.3rem;
+  line-height: 1.1;
+  padding-top: 0.2vh;
+}
+
+
 .finish-btn {
   background: linear-gradient(135deg, #a02a18 0%, #5c1107 100%);
   border: 0.25vh solid #ead7b3;
