@@ -38,10 +38,6 @@ const LevelScreen = () => {
       className="screen level-layout" 
       style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <button className="back-btn" onClick={() => setScreen('NAME')}>
-        Назад
-      </button>
-
       {/* НОВЫЙ БЛОК: Шапка по центру сверху */}
       <div className="level-screen-header">
         <img 

@@ -15,6 +15,20 @@ export const GameProvider = ({ children }) => {
     score: 0,
   });
 
+  const resetGame = () => {
+    setSettings(prev => ({
+      ...prev,
+      grade: 3,
+      rank: 'citizen',
+      name: '',
+      unlockedLevel: 1,
+      isProgressLocked: false,
+      currentLevel: 1,
+      sessionID: '',
+      score: 0,
+    }))
+  }
+
   const addPoints = (points) => {
     setSettings(prev => ({
       ...prev,
@@ -23,7 +37,7 @@ export const GameProvider = ({ children }) => {
   };
 
   return (
-    <GameContext.Provider value={{ screen, setScreen, settings, setSettings, addPoints }}>
+    <GameContext.Provider value={{ screen, setScreen, settings, setSettings, addPoints, resetGame }}>
       {children}
     </GameContext.Provider>
   );

@@ -31,6 +31,11 @@ const GameScreen = () => {
 
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, title: '', message: '' });
   const [isTimeWarning, setIsTimeWarning] = useState(false);
+
+  const [finishTitle, setFinishTitle] = useState("");
+  const [finishBadge, setFinishBadge] = useState("");
+  const [isGameFinished, setIsGameFinished] = useState(false);
+  const [finishReason, setFinishReason] = useState("");
   
 
   const handleAddComponents = async () => {
@@ -194,13 +199,8 @@ const GameScreen = () => {
   const renderMathText = (text) => {
     if (!text) return "";
 
-    // 1. Универсальное правило для СТЕПЕНЕЙ:
-    // Основание: либо выражение в скобках (x+1), либо одиночный символ x или 2
-    // Показатель: либо выражение в скобках (n-1), либо группа символов/цифр
     const powerRegex = /(\(([^)]+)\)|[a-zA-Z0-9])\^(\(([^)]+)\)|[a-zA-Z0-9]+)/g;
     
-    // 2. Универсальное правило для ДРОБЕЙ:
-    // Числитель/Знаменатель: либо всё, что внутри круглых скобок (...), либо просто идущие подряд буквы и цифры
     const fractionRegex = /(\(([^)]+)\)|[a-zA-Z0-9]+)\/(\(([^)]+)\)|[a-zA-Z0-9]+)/g;
 
     if (!text.includes('^') && !text.includes('/')) {
@@ -226,9 +226,7 @@ const GameScreen = () => {
           updatedElements.push({ type: 'text', content: el.content.substring(lastIndex, match.index) });
         }
         
-        // Если основание было в скобках, берем чистый текст из группы 2, иначе из группы 1
         const base = match[2] ? match[2] : match[1];
-        // Если степень была в скобках, берем чистый текст из группы 4, иначе из группы 3
         const exponent = match[4] ? match[4] : match[3];
 
         updatedElements.push({ type: 'power', base, exponent });
@@ -258,10 +256,8 @@ const GameScreen = () => {
           updatedElements.push({ type: 'text', content: el.content.substring(lastIndex, match.index) });
         }
         
-        // match[1] — весь числитель. Если в нем есть скобки, match[2] вытащит то, что ВНУТРИ них
         const numerator = match[2] ? match[2] : match[1];
         
-        // match[3] — весь знаменатель. Если в нем есть скобки, match[4] вытащит то, что ВНУТРИ них
         const denominator = match[4] ? match[4] : match[3];
 
         updatedElements.push({ type: 'fraction', num: numerator, denom: denominator });
@@ -274,7 +270,6 @@ const GameScreen = () => {
     });
     elements = updatedElements;
 
-    // --- ЭТАП 3: Рендеринг в JSX ---
     return (
       <span className="math-row-render">
         {elements.map((el, index) => {
@@ -382,32 +377,64 @@ const GameScreen = () => {
     setIsSubmitting(false);
 
     const nextIdx = currentStageIndex + 1;
-    
-    if (nextIdx < allStages.length && reason !== "Время вышло") {
+    const isOutOfPoints = (settings.score + stageScore) < 0;
+
+    // === КРИТИЧЕСКИЙ ВЫЛЕТ (Время вышло или кончились очки) ===
+    if (reason === "Время вышло" || isOutOfPoints) {
+      setSettings(prev => ({ ...prev, unlockedLevel: settings.unlockedLevel }));
+
+      setFinishTitle(reason === "Время вышло" ? "Время истекло!" : "Неудача!");
+      setFinishBadge(reason === "Время вышло" ? "вышло время" : "все очки потрачены");
+      setFinishReason(reason === "Время вышло" 
+        ? "Ты не уложился в отведенное время. Тренируйся, чтобы молниеносно принимать решения!" 
+        : "Эта ступень не покорилась тебе. Тренируйся, чтобы в следующий раз покорить ещё большие преграды!");
+      
+      setIsGameFinished(true);
+      return;
+    }
+
+    // === СЕССИЯ ПРЕРВАНА ===
+    if (reason === "Прервано") {
+      setFinishTitle("Турнир окончен!");
+      setFinishBadge("сессия прервана");
+      setFinishReason("Рыцарский турнир был завершен досрочно.");
+      setIsGameFinished(true);
+      return;
+    }
+
+    // === ПЕРЕХОД НА СЛЕДУЮЩИЙ ТУР ВНУТРИ ОДНОГО ЭТАПА ===
+    if (nextIdx < allStages.length) {
       setCurrentStageIndex(nextIdx);
       setIsLocked(true);
       loadStageData(nextIdx);
-    } else {
-      if (reason === "Время вышло" || settings.score + stageScore < 0) {
-        // тут выход из игры даже не переходя на LevelScreen, показать экран с результатом
-        setSettings(prev => ({ ...prev, unlockedLevel: settings.currentLevel }));
-      } else if (settings.isProgressLocked) {
-        setSettings(prev => ({ ...prev, unlockedLevel: Math.min(settings.unlockedLevel + 1, 5) }));
-      }
+    } 
+    // === ВСЕ ТУРЫ ЭТАПА ЗАВЕРШЕНЫ ===
+    else {
+      const currentLevelNum = parseInt(settings.currentLevel, 10) || 1;
+      
+      // Проверяем, последний ли это этап в игре (допустим, максимум 5)
+      const isLastTournamentStage = currentLevelNum >= 5;
 
-      // Настройка алертов выхода
-      if (settings.score + stageScore < 0 || reason === "Время вышло") {
-        setAlertConfig({
-          isOpen: true,
-          title: reason === "Время вышло" ? "Время истекло!" : "Неудача!",
-          message: reason === "Время вышло" ? "Ты не уложился в отведенное время. Попробуй еще раз!" : "Эта ступень не покорилась тебе, попробуй её пройти снова!"
-        });
-      } else {
+      if (!isLastTournamentStage) {
+        // А) Это промежуточный Этап -> Переводим на ступень выше
+        if (settings.isProgressLocked) {
+          setSettings(prev => ({ ...prev, unlockedLevel: Math.min(settings.unlockedLevel + 1, 5) }));
+        }
         setAlertConfig({
           isOpen: true,
           title: "Поздравляю!",
-          message: "Ты переходишь на ступень выше! Удачи в следующем турнире!"
+          message: "Ты переходишь на ступень выше! Удачи на твоём пути!"
         });
+      } else {
+        // Б) Это САМЫЙ ПОСЛЕДНИЙ ЭТАП -> Полное руководство турнира пройдено!
+        if (settings.isProgressLocked) {
+          setSettings(prev => ({ ...prev, unlockedLevel: 5 }));
+        }
+
+        setFinishTitle("Турнир окончен!");
+        setFinishBadge("все этапы пройдены");
+        setFinishReason("Поздравляю! Ты полностью завершил турнир и прошёл все испытания на своём пути!");
+        setIsGameFinished(true);
       }
     }
   };
@@ -416,6 +443,35 @@ const GameScreen = () => {
   const strokeDashoffset = 100 - timePercentage;
 
   if (isLoading) return <div className="loading font-main">Загрузка заданий...</div>;
+
+
+  if (isGameFinished) {
+    return (
+      <div className="game-screen-layout final-screen-bg">
+        <div className="final-scroll-container font-main">
+          <h1 className="final-title">{finishTitle}</h1>
+          <div className="final-reason-badge">{finishBadge}</div>
+
+          <p className="final-motivation-text">{finishReason}</p>
+
+          <div className="final-stats-box">
+            <div className="final-stat-item">
+              <span className="stat-label">Достигнутая ступень:</span>
+              <span className="stat-value text-highlight">{currentJob} ({currentEstate})</span>
+            </div>
+            <div className="final-stat-item">
+              <span className="stat-label">Итоговый счет:</span>
+              <span className="stat-value total-score-shimmer">{settings.score} б.</span>
+            </div>
+          </div>
+
+          <button className="finish-btn final-close-btn" onClick={() => setScreen('START')}>
+            Завершить
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="game-screen-layout">

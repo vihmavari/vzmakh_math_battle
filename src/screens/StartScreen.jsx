@@ -3,10 +3,10 @@ import { useGame } from '../context/GameContext';
 import './StartScreen.css';
 
 const StartScreen = () => {
-  const { setScreen } = useGame();
+  const { setScreen, resetGame } = useGame();
 
   useEffect(() => {
-    const handleKeyPress = () => setScreen('DIFFICULTY');
+    const handleKeyPress = () => {resetGame(); setScreen('DIFFICULTY');};
     window.addEventListener('keydown', handleKeyPress);
     window.addEventListener('touchstart', handleKeyPress);
 

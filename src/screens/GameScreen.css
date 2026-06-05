@@ -722,3 +722,150 @@ html {
   0% { transform: scale(1); }
   100% { transform: scale(1.1); }
 }
+
+/* Затемнение фона для финального экрана */
+.final-screen-bg {
+  background: rgba(12, 3, 2, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Стилизация свитка результатов */
+.final-scroll-container {
+  background: rgba(42, 10, 4, 0.95);
+  border: 0.4vh solid #ead7b3;
+  border-radius: 1.5vh;
+  padding: 6vh 4vw;
+  width: 100%;
+  max-width: 45vw;
+  text-align: center;
+  box-shadow: 0 1.5vh 4vh rgba(0, 0, 0, 0.8),
+              inset 0 0 3vh rgba(0, 0, 0, 0.6);
+  animation: scrollUnroll 0.4s ease-out forwards;
+}
+
+/* Заголовок "Турнир окончен!" */
+.final-title {
+  font-family: 'CiryllicHover', serif;
+  font-size: 3.5rem;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 0.1vw;
+  margin-bottom: 2vh;
+  text-shadow: 0 0.3vh 0.6vh rgba(0, 0, 0, 0.8);
+}
+
+/* Бейдж с причиной окончания игры */
+.final-reason-badge {
+  display: inline-block;
+  background: rgba(234, 215, 179, 0.1);
+  border: 0.2vh solid rgba(234, 215, 179, 0.3);
+  color: #ead7b3;
+  padding: 1vh 2vw;
+  font-family: 'CiryllicHover', serif;
+  font-size: 1.4rem;
+  border-radius: 0.5vh;
+  margin-bottom: 4vh;
+  text-transform: uppercase;
+}
+
+/* Контейнер статистики */
+.final-stats-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5vh;
+  margin-bottom: 5vh;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3vh 2vw;
+  border-radius: 1vh;
+  border: 0.15vh solid rgba(234, 215, 179, 0.1);
+}
+
+.final-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'GaramondBold', serif;
+  font-size: 1.5rem;
+  border-bottom: 0.15vh dashed rgba(234, 215, 179, 0.1);
+  padding-bottom: 1.5vh;
+}
+.final-stat-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.stat-label {
+  color: #b89a74;
+}
+
+.text-highlight {
+  color: #ead7b3;
+  font-weight: bold;
+}
+
+/* --------------------------------------------------------------------------
+   ЭФФЕКТ ПЕРЕЛИВАНИЯ ДЛЯ ОЧКОВ (Gold Shimmer Effect)
+   -------------------------------------------------------------------------- */
+.stat-value.total-score-shimmer {
+  font-size: 2.2rem;
+  font-weight: bold;
+  
+  /* Создаем градиент: золото -> белая вспышка -> золото */
+  background: linear-gradient(
+    to right, 
+    #ffd700 0%, 
+    #ffa500 25%, 
+    #fff 50%, 
+    #ffa500 75%, 
+    #ffd700 100%
+  );
+  background-size: 200% auto; /* Растягиваем, чтобы было куда двигать блик */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Запускаем бесконечную анимацию смещения градиента */
+  animation: goldShimmer 2.5s linear infinite;
+  filter: drop-shadow(0 0.2vh 0.4vh rgba(0, 0, 0, 0.6));
+}
+
+/* Кнопка выхода в меню */
+.final-close-btn {
+  font-size: 1.4rem;
+  padding: 1.8vh 4vw;
+}
+
+/* Анимация плавного появления свитка (как бы разворачивается) */
+@keyframes scrollUnroll {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.6) scaleX(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) scaleX(1);
+  }
+}
+
+/* Анимация проката золотого блика */
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.final-motivation-text {
+  font-family: 'GaramondBold', serif;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: #ead7b3;
+  margin-bottom: 4vh;
+  padding: 0 1vw;
+  text-shadow: 0 0.1vh 0.3vh rgba(0, 0, 0, 0.5);
+}
