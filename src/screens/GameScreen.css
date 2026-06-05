@@ -231,7 +231,9 @@ html {
   align-items: center;
   justify-content: space-between;
   padding: 1.8vh 2vw;
-  width: 22vw;
+  width: 25vw;
+  min-width: fit-content;
+  flex-wrap: nowrap;
 }
 
 .task-item.classic-mode .task-text {
@@ -283,6 +285,7 @@ html {
   font-weight: bold;
   box-shadow: inset 0 0.3vh 0.5vh rgba(0, 0, 0, 0.8);
   transition: all 0.15s ease;
+  margin-left: 1vw;
 }
 
 .task-item.classic-mode .math-input {
@@ -331,6 +334,56 @@ html {
 .finish-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   МОДИФИКАТОР 3: ТЕКСТОВЫЕ ЗАДАЧИ (На всю ширину)
+   -------------------------------------------------------------------------- */
+.task-item.text-task-mode {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 3vh 2.5vw;
+  width: 100%;
+  max-width: 65vw;
+  background: rgba(28, 14, 8, 0.6);
+  border-color: rgba(234, 215, 179, 0.3);
+}
+
+/* Стили для самого художественного текста задачи */
+.task-story-text {
+  font-size: 1.35rem;
+  line-height: 1.6;
+  color: #ead7b3;
+  margin-bottom: 3vh;
+  text-align: justify;
+  white-space: pre-line;
+}
+
+/* Нижняя строка ответа */
+.task-answer-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1vw;
+  border-top: 0.15vh solid rgba(234, 215, 179, 0.1); 
+  padding-top: 2vh;
+}
+
+/* Слово "Ответ:" */
+.task-answer-prefix {
+  font-family: 'CiryllicHover', serif;
+  font-size: 1.4rem;
+  color: #ffd700; /* Выделяем золотом */
+  text-transform: uppercase;
+  letter-spacing: 0.05vw;
+}
+
+/* Инпут для текстовой задачи */
+.math-input.text-task-input {
+  width: 14vh;
+  text-align: center;
+  font-size: 1.5rem;
 }
 
 

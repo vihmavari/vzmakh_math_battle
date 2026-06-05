@@ -420,13 +420,36 @@ const GameScreen = () => {
           <div className="task-list">
             {tasks.map((task, i) => {
               const isEquation = task.question.toLowerCase().includes('x');
+              const isTextTask = !(task.question.includes('+') || task.question.includes('•') || task.question.includes(':') || task.question.includes('−')) && !isEquation;
+
+              let itemClass = "task-item";
+              if (isTextTask) itemClass += " text-task-mode";
+              else if (isEquation) itemClass += " equation-mode";
+              else itemClass += " classic-mode";
 
               return (
-                <div 
-                  key={task.id} 
-                  className={`task-item ${isEquation ? 'equation-mode' : 'classic-mode'}`}
-                >
-                  {isEquation ? (
+                <div key={task.id} className={itemClass}>
+                  {isTextTask ? (
+                    /* ВЕРСТКА ДЛЯ ТЕКСТОВЫХ ЗАДАЧ: Текст на всю ширину, инпут внизу */
+                    <>
+                      <div className="task-story-text">{task.question}</div>
+                      <div className="task-answer-row">
+                        <span className="task-answer-prefix">Ответ: </span>
+                        <input 
+                          type="text" 
+                          className="math-input text-task-input" 
+                          disabled={isLocked}
+                          value={answers[i]}
+                          onChange={(e) => {
+                            const newAns = [...answers];
+                            newAns[i] = e.target.value;
+                            setAnswers(newAns);
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : isEquation ? (
+                    /* ВЕРСТКА ДЛЯ УРАВНЕНИЙ */
                     <>
                       <div className="equation-text">{task.question}</div>
                       <div className="equation-answer-row">
@@ -445,7 +468,7 @@ const GameScreen = () => {
                       </div>
                     </>
                   ) : (
-                    /* СТАНДАРТНАЯ ВЕРСТКА: Всё в одну линию для обычных примеров */
+                    /* СТАНДАРТНАЯ ВЕРСТКА ДЛЯ ПРИМЕРА */
                     <>
                       <span className="task-text">{task.question} = </span>
                       <input 
