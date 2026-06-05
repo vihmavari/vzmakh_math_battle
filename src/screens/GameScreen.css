@@ -322,15 +322,14 @@ html {
   display: inline-flex;
   align-items: center;
   height: 100%;
-  /* font-family: monospace; */
   font-size: 1.8rem;
 }
 
 /* Возвращаем степеням правильное текстовое выравнивание */
 .math-row-render > span.power-wrapper {
-  display: inline-block;     /* Отменяем флексбокс конкретно для степеней */
-  vertical-align: baseline;  /* Ставим основание строго на базовую линию строки */
-  align-items: flex-start;   /* Сбрасываем центрирование */
+  display: inline-block;
+  vertical-align: baseline;
+  align-items: flex-start;
   padding: 0 0.2vw;
 }
 
@@ -338,8 +337,8 @@ html {
 .power-wrapper sup {
   font-size: 1.1rem;
   color: #ffd700;
-  vertical-align: super;     /* Принудительно отправляем степень наверх */
-  line-height: 0;            /* Чтобы степень не увеличивала общую высоту строки */
+  vertical-align: super;
+  line-height: 0;
 }
 
 .fraction-wrapper {
