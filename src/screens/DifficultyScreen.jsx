@@ -9,7 +9,7 @@ const DifficultyScreen = () => {
 
   const JOURNAL_SHEET_ID = '1w80OTpqIg6L9gLrMwzhybBJCvTgr9-26V7lwEJUyRYA';
   
-  const grades = [3, 4, 5, 6];
+  const grades = [1, 2, 3, 4, 5, 6];
   const ranks = [
     { id: 'citizen', label: 'Горожанин' },
     { id: 'knight', label: 'Рыцарь' }
